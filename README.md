@@ -27,16 +27,17 @@ Chrome no permite que una extensión descomprimida reescriba sus propios archivo
 
 ## Publicar una versión nueva
 
-1. Subí `version` en `WhatsApp_Sender_Pro/manifest.json` (por ejemplo `1.9.1`).
-2. Commit y push a `main`.
-3. Creá y subí la etiqueta:
+No se usan GitHub Actions: el ZIP se arma en la PC y a GitHub solo se suben los archivos.
+
+1. Subí `version` en `WhatsApp_Sender_Pro/manifest.json` (por ejemplo `1.9.2`).
+2. Comprimí el **contenido** de `WhatsApp_Sender_Pro` (con `manifest.json` en la raíz del ZIP, sin `updater/config.json`) como `WhatsApp_Sender_Pro_v1.9.2.zip`.
+3. Commit y push a `main`, y creá el release con el ZIP:
 
    ```bash
-   git tag v1.9.1
-   git push origin v1.9.1
+   gh release create v1.9.2 WhatsApp_Sender_Pro_v1.9.2.zip --title "WhatsApp Sender Pro v1.9.2"
    ```
 
-La acción [Release](.github/workflows/release.yml) corre los tests, arma `WhatsApp_Sender_Pro_v1.9.1.zip` y publica el release. Las extensiones instaladas lo toman en menos de un día, o al abrirlas.
+Las extensiones instaladas lo toman en menos de un día, o al abrirlas.
 
 ## Desarrollo
 

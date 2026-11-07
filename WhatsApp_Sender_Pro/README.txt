@@ -1,4 +1,4 @@
-WhatsApp Sender Pro 1.9.0
+WhatsApp Sender Pro 1.9.1
 =========================
 
 Abre chats de WhatsApp desde Chrome sin agendar el número. El mensaje queda
@@ -53,6 +53,7 @@ Actualizaciones automáticas
 - La actualización se instala sobre esta misma carpeta y solo cuando la
   extensión no está abierta (popup, ventana ni página de redactar). Después
   Chrome la recarga sola y conserva tus datos.
+- La versión instalada se ve junto al título de Configuración (⚙).
 - Estado y "Buscar ahora": Configuración > Actualizaciones.
 - Para quitar el actualizador: "desinstalar-actualizador.cmd".
 

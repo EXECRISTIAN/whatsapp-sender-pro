@@ -86,7 +86,8 @@ button.primary { background: var(--accent); color: var(--btn-fg); border: none; 
 dialog { width: min(380px, calc(100vw - 24px)); max-height: calc(100vh - 24px); background: var(--bg); color: var(--fg); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
 dialog::backdrop { background: rgb(0 0 0 / .45); }
 .dialog-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; }
-.dialog-head h3 { margin: 0; }
+.dialog-head h3 { margin: 0; display: flex; align-items: center; gap: 6px; }
+.version-badge { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 999px; background: color-mix(in srgb, var(--accent, #25d366) 16%, transparent); color: inherit; opacity: .85; }
 #toast { pointer-events: none; position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 10000; max-width: calc(100vw - 24px); background: #222; color: #fff; padding: 8px 12px; border-radius: 10px; font-size: 12px; box-shadow: 0 4px 14px rgb(0 0 0 / .3); }
 .in-window { height: auto; }
 .window-frame { display: block; width: 100%; height: 100vh; border: none; background: var(--bg); }

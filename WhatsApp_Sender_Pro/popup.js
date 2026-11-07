@@ -440,6 +440,8 @@ async function openSettings(focusData = false, scrollTo = ''){
   qs('#dataTemplatesCount').textContent = `(${templates.length})`;
   qs('#dataHint').textContent = `${t('dataHint')}${inWindow ? '' : ' ' + t('dataHintPopup')}`;
   qs('#extensionId').textContent = chrome.runtime.id;
+  qs('#versionBadge').textContent = `v${chrome.runtime.getManifest().version}`;
+  qs('#versionBadge').title = t('versionTitle');
   renderUpdate();
   dlgSettings.showModal();
   if (scrollTo) qs(scrollTo).scrollIntoView({ block: 'start' });
