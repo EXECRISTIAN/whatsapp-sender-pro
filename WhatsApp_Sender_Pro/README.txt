@@ -1,4 +1,4 @@
-WhatsApp Sender Pro 1.10.2
+WhatsApp Sender Pro 1.10.3
 =========================
 
 Abre chats de WhatsApp desde Chrome sin agendar el número. El mensaje queda
@@ -66,12 +66,16 @@ Actualizaciones automáticas
   Sin el actualizador, "Descargar versión" baja el ZIP para instalarlo a mano.
 - Para quitar el actualizador: "desinstalar-actualizador.cmd".
 
-Instalación
+Instalación (una sola vez)
 1. Descomprimí el ZIP en una carpeta que no vayas a borrar.
-2. Abrí chrome://extensions
-3. Activá "Modo de desarrollador" (arriba a la derecha).
-4. Clic en "Cargar descomprimida" y elegí la carpeta que contiene manifest.json.
-5. Fijá la extensión con el ícono del rompecabezas de la barra de Chrome.
+2. Doble clic en "INSTALAR.cmd" (si Windows avisa: "Más información" >
+   "Ejecutar de todas formas"). Activa las actualizaciones automáticas,
+   copia la ruta de la carpeta y abre chrome://extensions.
+3. En esa página: activá "Modo de desarrollador" (arriba a la derecha), clic
+   en "Cargar descomprimida", pegá la ruta (Ctrl+V) en la barra de dirección
+   de la ventana y elegí "Seleccionar carpeta".
+4. Fijá la extensión con el ícono del rompecabezas de la barra de Chrome.
+Desde ahí todas las versiones nuevas se instalan solas.
 Para actualizar a mano: reemplazá los archivos (en esta carpeta o en otra) y
 tocá ↻ en chrome://extensions. No hace falta "Quitar" la extensión.
 

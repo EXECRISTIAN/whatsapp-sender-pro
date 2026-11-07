@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Mencari kemas kini…",
   "updateNetwork": "Tidak dapat menghubungi GitHub (luar talian).",
   "helperOn": "✓ Aktif: menyemak sekali sehari dan setiap kali anda membuka sambungan, dan memasang sendiri apabila anda tidak menggunakannya.",
-  "helperOff": "Tinggal satu langkah, sekali sahaja, supaya kemas kini dipasang sendiri:",
+  "helperOff": "⚠ Tinggal satu langkah, sekali sahaja, supaya kemas kini dipasang sendiri:",
   "helperStep1": "Tekan «Buka folder sambungan» dan, pada halaman yang dibuka, klik laluan di sebelah «Dimuatkan dari».",
   "helperStep2": "Klik dua kali «instalar-actualizador.cmd». Jika Windows bertanya, pilih «Maklumat lanjut» › «Jalankan juga».",
   "helperStep3": "Selesai: bahagian ini bertukar sendiri kepada «✓ Aktif».",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Adakah anda mempunyai kenalan atau templat yang disimpan?",
   "dataImportBackup": "Import sandaran",
   "autoBackupOn": "✓ Salinan automatik pada PC ini: jika anda membuang sambungan dan memuatkannya semula, kenalan dan templat kembali sendiri.",
-  "autoBackupOff": "Untuk turut mempunyai salinan automatik pada PC ini, lakukan langkah «Kemas kini automatik» (di bawah)."
+  "autoBackupOff": "Untuk turut mempunyai salinan automatik pada PC ini, lakukan langkah «Kemas kini automatik» (di bawah).",
+  "bannerNeedsHelper": "⬇ Versi {latest} tersedia. Pengemas kini belum dipasang, jadi ia tidak dipasang sendiri.",
+  "popupMaxSize": "Chrome tidak membenarkan tetingkap timbul menjadi lebih besar (maks. 800 × 600). Untuk ruang lebih, buka sambungan dalam tetingkap (⧉)."
 };

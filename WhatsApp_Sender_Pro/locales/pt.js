@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Procurando atualizações…",
   "updateNetwork": "Não foi possível consultar o GitHub (sem conexão).",
   "helperOn": "✓ Ativadas: verifica uma vez por dia e sempre que você abre a extensão, e instala sozinha quando você não está usando.",
-  "helperOff": "Falta um passo, só uma vez, para que sejam instaladas sozinhas:",
+  "helperOff": "⚠ Falta um passo, só uma vez, para que sejam instaladas sozinhas:",
   "helperStep1": "Toque em «Abrir pasta da extensão» e, na página que abrir, clique no caminho ao lado de «Carregada de».",
   "helperStep2": "Clique duas vezes em «instalar-actualizador.cmd». Se o Windows perguntar, escolha «Mais informações» › «Executar assim mesmo».",
   "helperStep3": "Pronto: esta seção muda sozinha para «✓ Ativadas».",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Você tinha contatos ou modelos salvos?",
   "dataImportBackup": "Importar cópia de segurança",
   "autoBackupOn": "✓ Cópia automática neste PC: se você remover a extensão e carregá-la de novo, seus contatos e modelos voltam sozinhos.",
-  "autoBackupOff": "Para ter também uma cópia automática neste PC, faça o passo de «Atualizações automáticas» (abaixo)."
+  "autoBackupOff": "Para ter também uma cópia automática neste PC, faça o passo de «Atualizações automáticas» (abaixo).",
+  "bannerNeedsHelper": "⬇ Versão {latest} disponível. Falta instalar o atualizador para que ela se instale sozinha.",
+  "popupMaxSize": "O Chrome não deixa o popup ficar maior (máx. 800 × 600). Para mais espaço, abra a extensão em uma janela (⧉)."
 };

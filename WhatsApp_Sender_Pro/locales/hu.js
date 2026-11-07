@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Frissítések keresése…",
   "updateNetwork": "A GitHub nem érhető el (offline).",
   "helperOn": "✓ Bekapcsolva: naponta egyszer és a bővítmény minden megnyitásakor ellenőriz, és magától telepít, amikor nem használod.",
-  "helperOff": "Még egy lépés van hátra, csak egyszer, hogy a frissítések maguktól települjenek:",
+  "helperOff": "⚠ Még egy lépés van hátra, csak egyszer, hogy a frissítések maguktól települjenek:",
   "helperStep1": "Kattints a „Bővítmény mappájának megnyitása” gombra, majd a megnyíló oldalon kattints a „Betöltve innen” melletti elérési útra.",
   "helperStep2": "Kattints duplán az „instalar-actualizador.cmd” fájlra. Ha a Windows rákérdez, válaszd a „További információ” › „Futtatás mindenképp” lehetőséget.",
   "helperStep3": "Kész: ez a rész magától „✓ Bekapcsolva” állapotra vált.",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Voltak mentett névjegyeid vagy sablonjaid?",
   "dataImportBackup": "Biztonsági mentés importálása",
   "autoBackupOn": "✓ Automatikus másolat ezen a gépen: ha eltávolítod a bővítményt, majd újra betöltöd, a névjegyek és sablonok maguktól visszakerülnek.",
-  "autoBackupOff": "Ha ezen a gépen automatikus másolatot is szeretnél, végezd el az „Automatikus frissítések” lépését (lent)."
+  "autoBackupOff": "Ha ezen a gépen automatikus másolatot is szeretnél, végezd el az „Automatikus frissítések” lépését (lent).",
+  "bannerNeedsHelper": "⬇ Elérhető a(z) {latest} verzió. A frissítő még nincs telepítve, ezért nem települ magától.",
+  "popupMaxSize": "A Chrome nem engedi tovább növelni a felugró ablakot (max. 800 × 600). Több helyért nyisd meg a bővítményt ablakban (⧉)."
 };

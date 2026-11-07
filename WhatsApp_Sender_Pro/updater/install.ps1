@@ -1,6 +1,6 @@
 ﻿# Registers the WhatsApp Sender Pro updater for the extension in the parent folder (current user, no admin).
 # It also keeps a copy of contacts and templates in %LOCALAPPDATA%\WhatsAppSenderPro\data.
-param([string]$Id = '')
+param([string]$Id = '', [switch]$Setup)
 $ErrorActionPreference = 'Stop'
 
 $HostName = 'com.execristian.whatsapp_sender_pro'
@@ -47,6 +47,23 @@ $hostManifestFile = Join-Path $dest "$HostName.json"
 $key = "HKCU:\Software\Google\Chrome\NativeMessagingHosts\$HostName"
 New-Item -Path $key -Force | Out-Null
 Set-Item -Path $key -Value $hostManifestFile
+
+if ($Setup) {
+  # First install (INSTALAR.cmd): the ID comes from the manifest key, so the updater works before Chrome loads the folder
+  try { Set-Clipboard -Value $ext } catch {}
+  try { Start-Process 'chrome.exe' 'chrome://extensions' } catch {}
+  Write-Host ''
+  Write-Host "WhatsApp Sender Pro $($manifest.version): actualizaciones automaticas activadas." -ForegroundColor Green
+  Write-Host ''
+  Write-Host 'Ultimo paso, en la pagina chrome://extensions que se acaba de abrir:'
+  Write-Host '  1. Activa "Modo de desarrollador" (arriba a la derecha).'
+  Write-Host '  2. Clic en "Cargar descomprimida".'
+  Write-Host '  3. En la barra de direccion de la ventana pega (Ctrl+V) esta carpeta y elegi "Seleccionar carpeta":'
+  Write-Host "     $ext" -ForegroundColor Cyan
+  Write-Host ''
+  Write-Host 'Listo. Desde ahora la extension se actualiza sola. Podes cerrar esta ventana.'
+  return
+}
 
 Write-Host ''
 Write-Host "Actualizador instalado para $AppName $($manifest.version)" -ForegroundColor Green

@@ -47,7 +47,7 @@
         <div id="contactInfo" class="small note hidden"></div>
       </div>
 
-      <div class="row">
+      <div class="row msg-row">
         <div class="label-row">
           <label for="message" data-i18n="message"></label>
           <span class="info"><button type="button" class="info-btn" data-i18n-label="moreInfo">ⓘ</button><span class="info-tip" role="tooltip" data-i18n="attachmentsHint"></span></span>
@@ -172,7 +172,7 @@
         <input id="outlineColor" type="color" />
       </div>
       <div class="row">
-        <label for="uiScale" data-i18n="uiScale"></label>
+        <div class="label-row"><label for="uiScale" data-i18n="uiScale"></label><output id="uiScaleValue" for="uiScale" class="scale-value"></output></div>
         <input id="uiScale" type="range" min="50" max="200" step="10" />
       </div>
       <div class="row">

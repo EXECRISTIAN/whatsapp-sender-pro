@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Recherche de mises à jour…",
   "updateNetwork": "Impossible de joindre GitHub (hors ligne).",
   "helperOn": "✓ Activées : vérifie une fois par jour et à chaque ouverture de l’extension, et installe toute seule quand vous ne l’utilisez pas.",
-  "helperOff": "Il reste une étape, une seule fois, pour qu’elles s’installent toutes seules :",
+  "helperOff": "⚠ Il reste une étape, une seule fois, pour qu’elles s’installent toutes seules :",
   "helperStep1": "Touchez « Ouvrir le dossier de l’extension » puis, sur la page qui s’ouvre, cliquez sur le chemin à côté de « Chargée depuis ».",
   "helperStep2": "Double-cliquez sur « instalar-actualizador.cmd ». Si Windows le demande, choisissez « Informations complémentaires » › « Exécuter quand même ».",
   "helperStep3": "C’est fait : cette section passe toute seule à « ✓ Activées ».",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Aviez-vous des contacts ou des modèles enregistrés ?",
   "dataImportBackup": "Importer une sauvegarde",
   "autoBackupOn": "✓ Copie automatique sur ce PC : si vous retirez l’extension puis la rechargez, vos contacts et modèles reviennent tout seuls.",
-  "autoBackupOff": "Pour avoir aussi une copie automatique sur ce PC, faites l’étape « Mises à jour automatiques » (plus bas)."
+  "autoBackupOff": "Pour avoir aussi une copie automatique sur ce PC, faites l’étape « Mises à jour automatiques » (plus bas).",
+  "bannerNeedsHelper": "⬇ La version {latest} est disponible. L’outil de mise à jour n’est pas encore installé pour qu’elle s’installe seule.",
+  "popupMaxSize": "Chrome ne permet pas d’agrandir davantage la fenêtre contextuelle (max. 800 × 600). Pour plus d’espace, ouvrez l’extension dans une fenêtre (⧉)."
 };

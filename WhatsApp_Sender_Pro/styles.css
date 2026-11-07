@@ -186,6 +186,7 @@ body:has(> #rootSizer > .window-frame) #rootSizer { padding: 0; }
 .switch-row input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 [dir="rtl"] .switch-row input:checked::after { transform: translateX(-16px); }
 [dir="rtl"] .switch-row input::after { left: auto; right: 3px; }
+.scale-value { margin-inline-start: auto; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--accent); min-width: 4ch; text-align: end; }
 .two-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 
 /* Updates */
@@ -203,10 +204,29 @@ code { font-size: 11px; user-select: all; }
 .resize-grip.left { right: auto; left: 0; cursor: nesw-resize; transform: scaleX(-1); }
 .resize-grip:hover { opacity: 1; }
 
-/* Wide window: message on the left, contacts and templates on the right */
+/* Responsive layout: the page fills its height (popup or window); the message box and the
+   contacts/templates list share the free space and keep a usable minimum when small */
+#rootSizer:has(> .library) { box-sizing: border-box; display: flex; flex-direction: column; height: calc(100vh / var(--scale)); min-height: min-content; }
+#rootSizer > .topbar, #rootSizer > .update-banner { flex: none; }
+#form { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+#form > .msg-row { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+#form > .actions { flex: none; }
+.msg-box { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+.msg-box textarea { flex: 1 1 auto; height: auto; min-height: 72px; resize: none; }
+.library { flex: 1.3 1 0; display: flex; flex-direction: column; min-height: 150px; margin-top: 10px; }
+.library .lib-list { flex: 1 1 auto; max-height: none; min-height: 48px; }
+
+/* One column: the message keeps a moderate height and the list takes the rest */
+@media (max-width: 719px) {
+  #form, #form > .msg-row, .msg-box { flex: none; }
+  .msg-box textarea { flex: none; height: clamp(72px, calc(18vh / var(--scale)), 160px); }
+}
+
+/* Wide: message on the left, contacts and templates on the right, both full height */
 @media (min-width: 720px) {
-  #rootSizer:has(> .library) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 18px; align-items: start; }
-  #rootSizer > .topbar { grid-column: 1 / -1; }
-  .library .lib-list { max-height: calc(100vh - 170px); }
-  .msg-box textarea { min-height: 180px; }
+  #rootSizer:has(> .library) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr); column-gap: 18px; align-items: stretch; }
+  #rootSizer > .topbar, #rootSizer > .update-banner { grid-column: 1 / -1; }
+  #rootSizer > .update-banner.hidden + #form, #rootSizer > .update-banner.hidden ~ .library { grid-row: 2 / 4; }
+  #rootSizer > #form, #rootSizer > .library { grid-row: 3; min-height: 0; }
+  .library { margin-top: 0; }
 }

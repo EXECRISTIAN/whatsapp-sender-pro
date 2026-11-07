@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Söker efter uppdateringar…",
   "updateNetwork": "Det gick inte att nå GitHub (offline).",
   "helperOn": "✓ På: kontrollerar en gång om dagen och varje gång du öppnar tillägget, och installerar själv när du inte använder det.",
-  "helperOff": "Ett steg kvar, bara en gång, för att uppdateringar ska installeras av sig själva:",
+  "helperOff": "⚠ Ett steg kvar, bara en gång, för att uppdateringar ska installeras av sig själva:",
   "helperStep1": "Tryck på ”Öppna tilläggets mapp” och klicka på sökvägen bredvid ”Inläst från” på sidan som öppnas.",
   "helperStep2": "Dubbelklicka på ”instalar-actualizador.cmd”. Om Windows frågar, välj ”Mer information” › ”Kör ändå”.",
   "helperStep3": "Klart: det här avsnittet byter själv till ”✓ På”.",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Hade du sparade kontakter eller mallar?",
   "dataImportBackup": "Importera säkerhetskopia",
   "autoBackupOn": "✓ Automatisk kopia på den här datorn: om du tar bort tillägget och läser in det igen kommer kontakter och mallar tillbaka av sig själva.",
-  "autoBackupOff": "För att även ha en automatisk kopia på den här datorn, gör steget under ”Automatiska uppdateringar” (nedan)."
+  "autoBackupOff": "För att även ha en automatisk kopia på den här datorn, gör steget under ”Automatiska uppdateringar” (nedan).",
+  "bannerNeedsHelper": "⬇ Version {latest} finns tillgänglig. Uppdateraren är inte installerad än, så den installeras inte av sig själv.",
+  "popupMaxSize": "Chrome låter inte popup-fönstret bli större (max 800 × 600). Öppna tillägget i ett fönster (⧉) för mer utrymme."
 };

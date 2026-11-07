@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Se caută actualizări…",
   "updateNetwork": "GitHub nu este accesibil (offline).",
   "helperOn": "✓ Activate: verifică o dată pe zi și de fiecare dată când deschizi extensia și instalează singur când n-o folosești.",
-  "helperOff": "Mai e un pas, o singură dată, ca actualizările să se instaleze singure:",
+  "helperOff": "⚠ Mai e un pas, o singură dată, ca actualizările să se instaleze singure:",
   "helperStep1": "Apasă „Deschide folderul extensiei” și, în pagina care se deschide, dă clic pe calea de lângă „Încărcată din”.",
   "helperStep2": "Dă dublu clic pe „instalar-actualizador.cmd”. Dacă Windows întreabă, alege „Mai multe informații” › „Rulează oricum”.",
   "helperStep3": "Gata: secțiunea devine singură „✓ Activate”.",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Aveai contacte sau șabloane salvate?",
   "dataImportBackup": "Importă copia de rezervă",
   "autoBackupOn": "✓ Copie automată pe acest PC: dacă elimini extensia și o încarci din nou, contactele și șabloanele revin singure.",
-  "autoBackupOff": "Ca să ai și o copie automată pe acest PC, fă pasul de la „Actualizări automate” (mai jos)."
+  "autoBackupOff": "Ca să ai și o copie automată pe acest PC, fă pasul de la „Actualizări automate” (mai jos).",
+  "bannerNeedsHelper": "⬇ Versiunea {latest} este disponibilă. Actualizatorul nu este încă instalat, deci nu se va instala singură.",
+  "popupMaxSize": "Chrome nu permite mărirea ferestrei pop-up (max. 800 × 600). Pentru mai mult spațiu, deschide extensia într-o fereastră (⧉)."
 };

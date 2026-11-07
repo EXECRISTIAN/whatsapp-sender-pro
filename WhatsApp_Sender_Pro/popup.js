@@ -52,6 +52,9 @@ const outlineColor = qs('#outlineColor');
 const bgImage = qs('#bgImage');
 const bgHint = qs('#bgHint');
 const uiScale = qs('#uiScale');
+// Shows the zoom percentage while the slider moves
+const showScale = () => { qs('#uiScaleValue').textContent = `${uiScale.value}%`; };
+uiScale.addEventListener('input', showScale);
 const dataContacts = qs('#dataContacts');
 const dataTemplates = qs('#dataTemplates');
 const importInput = qs('#importInput');
@@ -399,10 +402,14 @@ for (const grip of grips) grip.addEventListener('pointerdown', e => {
   grip.setPointerCapture(e.pointerId);
   const start = { x: e.screenX, y: e.screenY, w: ui.width, h: ui.height };
   const dir = grip.dataset.side === 'left' ? -1 : 1;
+  let warned = false;
   const move = ev => {
-    ui.width = clamp(start.w + dir * (ev.screenX - start.x), POPUP.minW, POPUP.maxW);
-    ui.height = clamp(start.h + ev.screenY - start.y, POPUP.minH, POPUP.maxH);
+    const w = start.w + dir * (ev.screenX - start.x), h = start.h + ev.screenY - start.y;
+    ui.width = clamp(w, POPUP.minW, POPUP.maxW);
+    ui.height = clamp(h, POPUP.minH, POPUP.maxH);
     applyUI();
+    // Chrome does not let a popup grow past 800 × 600: point to the window, which has no limit
+    if (!warned && (h > POPUP.maxH + 24 || w > POPUP.maxW + 24)) { warned = true; showToast(t('popupMaxSize')); }
   };
   const up = async () => {
     grip.removeEventListener('pointermove', move);
@@ -435,6 +442,7 @@ async function openSettings(focusData = false, scrollTo = ''){
   accentColor.value = settings.accent;
   outlineColor.value = settings.outline;
   uiScale.value = ui.scale;
+  showScale();
   qs('#dataContactsCount').textContent = `(${contacts.length})`;
   qs('#dataTemplatesCount').textContent = `(${templates.length})`;
   qs('#dataHint').textContent = `${t('dataHint')}${inWindow ? '' : ' ' + t('dataHintPopup')}`;
@@ -549,7 +557,7 @@ function renderUpdate(){
   const auto = s.auto !== false;
   if (s.notice && s.updatedTo === chrome.runtime.getManifest().version) { text = t('bannerUpdated', { version: s.updatedTo }); dismiss = true; }
   // With automatic updates working nothing is shown: the update installs by itself when the extension closes
-  else if (s.status === 'available' && !(auto && s.helper)) { text = t('bannerManual', s); action = 'goto'; }
+  else if (s.status === 'available' && !(auto && s.helper)) { text = t(auto ? 'bannerNeedsHelper' : 'bannerManual', s); action = 'goto'; }
   else if (s.status === 'failed') { text = t('bannerFailed', { latest: s.latest, error: s.error }); action = 'retry'; isError = true; }
   else if (s.status === 'noAsset') { text = t('bannerNoAsset', s); isError = true; }
   // Data: restored from the automatic copy, or a fresh install with nothing saved yet

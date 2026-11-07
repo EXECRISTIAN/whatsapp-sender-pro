@@ -13,8 +13,10 @@ El mensaje queda escrito en el chat y lo envía el usuario: no hay envío autom�
 ## Instalación
 
 1. Descargá el ZIP del [último release](https://github.com/EXECRISTIAN/whatsapp-sender-pro/releases/latest) y descomprimilo en una carpeta que no vayas a borrar.
-2. En `chrome://extensions` activá **Modo de desarrollador** y tocá **Cargar descomprimida**. Elegí la carpeta que contiene `manifest.json`.
-3. (Una sola vez, en Windows) doble clic en `instalar-actualizador.cmd` dentro de esa carpeta para que las actualizaciones se instalen solas.
+2. Doble clic en `INSTALAR.cmd`: activa las actualizaciones automáticas, copia la ruta de la carpeta y abre `chrome://extensions`.
+3. Ahí activá **Modo de desarrollador**, tocá **Cargar descomprimida**, pegá la ruta y elegí la carpeta.
+
+Desde ahí las versiones nuevas se instalan solas. Quien ya tenga la extensión cargada puede activar las actualizaciones con `instalar-actualizador.cmd` (o desde Configuración › Actualizaciones).
 
 ## Actualizaciones automáticas
 

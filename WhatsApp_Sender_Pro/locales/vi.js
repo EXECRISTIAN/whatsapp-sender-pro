@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Đang tìm bản cập nhật…",
   "updateNetwork": "Không kết nối được GitHub (ngoại tuyến).",
   "helperOn": "✓ Đang bật: kiểm tra mỗi ngày một lần và mỗi khi bạn mở tiện ích, tự cài khi bạn không dùng.",
-  "helperOff": "Còn một bước, chỉ một lần, để bản cập nhật tự cài:",
+  "helperOff": "⚠ Còn một bước, chỉ một lần, để bản cập nhật tự cài:",
   "helperStep1": "Nhấn «Mở thư mục tiện ích» và trên trang vừa mở, nhấp vào đường dẫn cạnh «Được tải từ».",
   "helperStep2": "Nhấp đúp «instalar-actualizador.cmd». Nếu Windows hỏi, chọn «Thông tin khác» › «Vẫn chạy».",
   "helperStep3": "Xong: mục này tự chuyển thành «✓ Đang bật».",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Bạn có liên hệ hoặc mẫu đã lưu không?",
   "dataImportBackup": "Nhập bản sao lưu",
   "autoBackupOn": "✓ Bản sao tự động trên máy này: nếu bạn gỡ tiện ích rồi tải lại, liên hệ và mẫu sẽ tự quay về.",
-  "autoBackupOff": "Để có thêm bản sao tự động trên máy này, hãy làm bước ở mục «Tự động cập nhật» (bên dưới)."
+  "autoBackupOff": "Để có thêm bản sao tự động trên máy này, hãy làm bước ở mục «Tự động cập nhật» (bên dưới).",
+  "bannerNeedsHelper": "⬇ Đã có phiên bản {latest}. Trình cập nhật chưa được cài nên bản này không tự cài được.",
+  "popupMaxSize": "Chrome không cho cửa sổ bật lên lớn hơn (tối đa 800 × 600). Để có thêm chỗ, hãy mở tiện ích trong cửa sổ (⧉)."
 };

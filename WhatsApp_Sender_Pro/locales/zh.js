@@ -109,7 +109,7 @@ export default {
   "updateChecking": "正在检查更新…",
   "updateNetwork": "无法连接 GitHub（离线）。",
   "helperOn": "✓ 已开启：每天检查一次，并在每次打开扩展时检查，在你不使用时自动安装。",
-  "helperOff": "还差一步（只需一次），更新才能自动安装：",
+  "helperOff": "⚠ 还差一步（只需一次），更新才能自动安装：",
   "helperStep1": "点「打开扩展文件夹」，在打开的页面中点击「加载来源」旁边的路径。",
   "helperStep2": "双击「instalar-actualizador.cmd」。如果 Windows 询问，选择「更多信息」›「仍要运行」。",
   "helperStep3": "完成：此处会自动变为「✓ 已开启」。",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "你之前保存过联系人或模板吗？",
   "dataImportBackup": "导入备份",
   "autoBackupOn": "✓ 在这台电脑上自动备份：即使移除扩展后重新加载，你的联系人和模板也会自动回来。",
-  "autoBackupOff": "如需在这台电脑上另外保留自动副本，请完成「自动更新」中的步骤（见下方）。"
+  "autoBackupOff": "如需在这台电脑上另外保留自动副本，请完成「自动更新」中的步骤（见下方）。",
+  "bannerNeedsHelper": "⬇ {latest} 版本已发布。尚未安装更新程序，所以无法自动安装。",
+  "popupMaxSize": "Chrome 不允许弹出窗口再变大（最大 800 × 600）。需要更多空间时，请在窗口中打开扩展（⧉）。"
 };

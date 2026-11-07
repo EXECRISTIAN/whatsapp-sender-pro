@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Buscando actualizaciones…",
   "updateNetwork": "No se pudo consultar GitHub (sin conexión).",
   "helperOn": "✓ Activas: busca una vez por día y cada vez que abrís la extensión, e instala sola cuando no la estás usando.",
-  "helperOff": "Falta un paso, una sola vez, para que se instalen solas:",
+  "helperOff": "⚠ Falta un paso, una sola vez, para que se instalen solas:",
   "helperStep1": "Tocá «Abrir carpeta de la extensión» y, en la página que se abre, hacé clic en la ruta de «Cargada desde».",
   "helperStep2": "Doble clic en «instalar-actualizador.cmd». Si Windows pregunta, elegí «Más información» › «Ejecutar de todas formas».",
   "helperStep3": "Listo: esta sección cambia sola a «✓ Activas».",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "¿Tenías contactos o plantillas guardados?",
   "dataImportBackup": "Importar copia de seguridad",
   "autoBackupOn": "✓ Copia automática en esta PC: si quitás la extensión y la volvés a cargar, tus contactos y plantillas vuelven solos.",
-  "autoBackupOff": "Para tener además una copia automática en esta PC, hacé el paso de «Actualizaciones automáticas» (más abajo)."
+  "autoBackupOff": "Para tener además una copia automática en esta PC, hacé el paso de «Actualizaciones automáticas» (más abajo).",
+  "bannerNeedsHelper": "⬇ Versión {latest} disponible. Falta instalar el actualizador para que se instale sola.",
+  "popupMaxSize": "Chrome no deja que el popup sea más grande (máx. 800 × 600). Para más espacio, abrí la extensión en ventana (⧉)."
 };

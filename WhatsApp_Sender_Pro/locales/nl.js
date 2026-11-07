@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Zoeken naar updates…",
   "updateNetwork": "GitHub niet bereikbaar (offline).",
   "helperOn": "✓ Aan: zoekt één keer per dag en elke keer dat je de extensie opent, en installeert vanzelf als je haar niet gebruikt.",
-  "helperOff": "Nog één stap, maar één keer, zodat updates zichzelf installeren:",
+  "helperOff": "⚠ Nog één stap, maar één keer, zodat updates zichzelf installeren:",
   "helperStep1": "Tik op „Map van de extensie openen” en klik op de pagina die opent op het pad naast „Geladen vanaf”.",
   "helperStep2": "Dubbelklik op „instalar-actualizador.cmd”. Als Windows het vraagt, kies „Meer informatie” › „Toch uitvoeren”.",
   "helperStep3": "Klaar: dit onderdeel springt vanzelf op „✓ Aan”.",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Had je opgeslagen contacten of sjablonen?",
   "dataImportBackup": "Back-up importeren",
   "autoBackupOn": "✓ Automatische kopie op deze pc: als je de extensie verwijdert en opnieuw laadt, komen je contacten en sjablonen vanzelf terug.",
-  "autoBackupOff": "Voor een extra automatische kopie op deze pc, voer de stap bij „Automatische updates” (hieronder) uit."
+  "autoBackupOff": "Voor een extra automatische kopie op deze pc, voer de stap bij „Automatische updates” (hieronder) uit.",
+  "bannerNeedsHelper": "⬇ Versie {latest} is beschikbaar. De updater is nog niet geïnstalleerd, dus hij installeert zich niet vanzelf.",
+  "popupMaxSize": "Chrome laat de pop-up niet groter worden (max. 800 × 600). Open de extensie in een venster (⧉) voor meer ruimte."
 };

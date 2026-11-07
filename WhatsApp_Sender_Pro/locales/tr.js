@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Güncellemeler aranıyor…",
   "updateNetwork": "GitHub'a ulaşılamadı (çevrimdışı).",
   "helperOn": "✓ Açık: günde bir kez ve uzantıyı her açtığınızda denetler, siz kullanmıyorken kendisi yükler.",
-  "helperOff": "Kendiliğinden yüklenmeleri için bir adım kaldı (yalnızca bir kez):",
+  "helperOff": "⚠ Kendiliğinden yüklenmeleri için bir adım kaldı (yalnızca bir kez):",
   "helperStep1": "«Uzantı klasörünü aç»a dokunun ve açılan sayfada «Yüklendiği yer» yanındaki yola tıklayın.",
   "helperStep2": "«instalar-actualizador.cmd» dosyasına çift tıklayın. Windows sorarsa «Ek bilgi» › «Yine de çalıştır»ı seçin.",
   "helperStep3": "Bitti: bu bölüm kendiliğinden «✓ Açık» olur.",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Kayıtlı kişileriniz veya şablonlarınız var mıydı?",
   "dataImportBackup": "Yedeği içe aktar",
   "autoBackupOn": "✓ Bu bilgisayarda otomatik kopya: uzantıyı kaldırıp yeniden yüklerseniz kişileriniz ve şablonlarınız kendiliğinden geri gelir.",
-  "autoBackupOff": "Bu bilgisayarda ayrıca otomatik bir kopya olması için «Otomatik güncellemeler» adımını (aşağıda) uygulayın."
+  "autoBackupOff": "Bu bilgisayarda ayrıca otomatik bir kopya olması için «Otomatik güncellemeler» adımını (aşağıda) uygulayın.",
+  "bannerNeedsHelper": "⬇ {latest} sürümü kullanılabilir. Kendiliğinden yüklenmesi için güncelleyicinin kurulması gerekiyor.",
+  "popupMaxSize": "Chrome açılır pencerenin daha fazla büyümesine izin vermez (en fazla 800 × 600). Daha fazla alan için uzantıyı pencerede açın (⧉)."
 };

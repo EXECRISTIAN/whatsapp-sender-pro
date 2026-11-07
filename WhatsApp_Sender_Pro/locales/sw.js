@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Inatafuta masasisho…",
   "updateNetwork": "Imeshindikana kufikia GitHub (nje ya mtandao).",
   "helperOn": "✓ Yamewashwa: hukagua mara moja kwa siku na kila unapofungua kiendelezi, na husakinisha yenyewe usipokitumia.",
-  "helperOff": "Imebaki hatua moja, mara moja tu, ili masasisho yajisakinishe yenyewe:",
+  "helperOff": "⚠ Imebaki hatua moja, mara moja tu, ili masasisho yajisakinishe yenyewe:",
   "helperStep1": "Bonyeza «Fungua folda ya kiendelezi» kisha, kwenye ukurasa unaofunguka, bofya njia iliyo karibu na «Imepakiwa kutoka».",
   "helperStep2": "Bofya mara mbili «instalar-actualizador.cmd». Windows ikiuliza, chagua «Maelezo zaidi» › «Endesha hata hivyo».",
   "helperStep3": "Imekamilika: sehemu hii itabadilika yenyewe kuwa «✓ Yamewashwa».",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Ulikuwa na waasiliani au violezo vilivyohifadhiwa?",
   "dataImportBackup": "Leta nakala rudufu",
   "autoBackupOn": "✓ Nakala ya kiotomatiki kwenye kompyuta hii: ukiondoa kiendelezi na kukipakia tena, waasiliani na violezo vyako vitarudi vyenyewe.",
-  "autoBackupOff": "Ili pia kuwa na nakala ya kiotomatiki kwenye kompyuta hii, fanya hatua ya «Masasisho ya kiotomatiki» (hapa chini)."
+  "autoBackupOff": "Ili pia kuwa na nakala ya kiotomatiki kwenye kompyuta hii, fanya hatua ya «Masasisho ya kiotomatiki» (hapa chini).",
+  "bannerNeedsHelper": "⬇ Toleo {latest} linapatikana. Kisasishaji bado hakijasakinishwa, kwa hiyo halitajisakinisha lenyewe.",
+  "popupMaxSize": "Chrome hairuhusu dirisha ibukizi kuwa kubwa zaidi (kiwango cha juu 800 × 600). Kwa nafasi zaidi, fungua kiendelezi kwenye dirisha (⧉)."
 };

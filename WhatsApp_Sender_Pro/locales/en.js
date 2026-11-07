@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Checking for updates…",
   "updateNetwork": "Could not reach GitHub (offline).",
   "helperOn": "✓ On: checks once a day and every time you open the extension, and installs by itself when you are not using it.",
-  "helperOff": "One step left, only once, so updates install by themselves:",
+  "helperOff": "⚠ One step left, only once, so updates install by themselves:",
   "helperStep1": "Press “Open extension folder” and, on the page that opens, click the path next to “Loaded from”.",
   "helperStep2": "Double-click “instalar-actualizador.cmd”. If Windows asks, choose “More info” › “Run anyway”.",
   "helperStep3": "Done: this section turns to “✓ On” by itself.",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Did you have saved contacts or templates?",
   "dataImportBackup": "Import backup",
   "autoBackupOn": "✓ Automatic copy on this PC: if you remove the extension and load it again, your contacts and templates come back by themselves.",
-  "autoBackupOff": "To also keep an automatic copy on this PC, do the “Automatic updates” step (below)."
+  "autoBackupOff": "To also keep an automatic copy on this PC, do the “Automatic updates” step (below).",
+  "bannerNeedsHelper": "⬇ Version {latest} is available. The updater is not installed yet, so it cannot install by itself.",
+  "popupMaxSize": "Chrome does not let the popup get bigger (max 800 × 600). For more room, open the extension in a window (⧉)."
 };

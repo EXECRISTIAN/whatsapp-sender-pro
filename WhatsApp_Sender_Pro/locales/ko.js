@@ -109,7 +109,7 @@ export default {
   "updateChecking": "업데이트 확인 중…",
   "updateNetwork": "GitHub에 연결할 수 없습니다(오프라인).",
   "helperOn": "✓ 켜짐: 하루에 한 번, 그리고 확장 프로그램을 열 때마다 확인하고, 사용하지 않을 때 자동으로 설치합니다.",
-  "helperOff": "자동 설치까지 한 단계 남았습니다(한 번만):",
+  "helperOff": "⚠ 자동 설치까지 한 단계 남았습니다(한 번만):",
   "helperStep1": "「확장 프로그램 폴더 열기」를 누르고, 열린 페이지에서 「로드한 위치」 옆의 경로를 클릭하세요.",
   "helperStep2": "「instalar-actualizador.cmd」를 두 번 클릭하세요. Windows가 물으면 「추가 정보」 › 「실행」을 고르세요.",
   "helperStep3": "완료: 이 항목이 자동으로 「✓ 켜짐」으로 바뀝니다.",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "저장해 둔 연락처나 템플릿이 있었나요?",
   "dataImportBackup": "백업 가져오기",
   "autoBackupOn": "✓ 이 PC에 자동 사본: 확장 프로그램을 제거했다가 다시 로드해도 연락처와 템플릿이 자동으로 돌아옵니다.",
-  "autoBackupOff": "이 PC에도 자동 사본을 두려면 「자동 업데이트」 단계(아래)를 완료하세요."
+  "autoBackupOff": "이 PC에도 자동 사본을 두려면 「자동 업데이트」 단계(아래)를 완료하세요.",
+  "bannerNeedsHelper": "⬇ {latest} 버전을 사용할 수 있습니다. 업데이터가 설치되지 않아 자동으로 설치되지 않습니다.",
+  "popupMaxSize": "Chrome에서는 팝업을 더 크게 할 수 없습니다(최대 800 × 600). 더 넓게 쓰려면 확장 프로그램을 창에서 여세요(⧉)."
 };

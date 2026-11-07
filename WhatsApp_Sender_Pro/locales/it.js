@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Ricerca aggiornamenti…",
   "updateNetwork": "Impossibile contattare GitHub (offline).",
   "helperOn": "✓ Attivi: controlla una volta al giorno e ogni volta che apri l’estensione, e installa da solo quando non la stai usando.",
-  "helperOff": "Manca un passaggio, una sola volta, perché si installino da soli:",
+  "helperOff": "⚠ Manca un passaggio, una sola volta, perché si installino da soli:",
   "helperStep1": "Tocca «Apri cartella dell’estensione» e, nella pagina che si apre, fai clic sul percorso accanto a «Caricata da».",
   "helperStep2": "Fai doppio clic su «instalar-actualizador.cmd». Se Windows lo chiede, scegli «Ulteriori informazioni» › «Esegui comunque».",
   "helperStep3": "Fatto: questa sezione passa da sola a «✓ Attivi».",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Avevi contatti o modelli salvati?",
   "dataImportBackup": "Importa backup",
   "autoBackupOn": "✓ Copia automatica su questo PC: se rimuovi l’estensione e la ricarichi, contatti e modelli tornano da soli.",
-  "autoBackupOff": "Per avere anche una copia automatica su questo PC, completa il passaggio di «Aggiornamenti automatici» (più in basso)."
+  "autoBackupOff": "Per avere anche una copia automatica su questo PC, completa il passaggio di «Aggiornamenti automatici» (più in basso).",
+  "bannerNeedsHelper": "⬇ È disponibile la versione {latest}. Manca l’aggiornatore perché si installi da sola.",
+  "popupMaxSize": "Chrome non permette di ingrandire ancora il popup (max 800 × 600). Per più spazio, apri l’estensione in una finestra (⧉)."
 };

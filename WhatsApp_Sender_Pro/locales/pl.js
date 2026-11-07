@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Szukanie aktualizacji…",
   "updateNetwork": "Brak połączenia z GitHubem (offline).",
   "helperOn": "✓ Włączone: sprawdza raz dziennie i przy każdym otwarciu rozszerzenia, a instaluje samo, gdy go nie używasz.",
-  "helperOff": "Został jeden krok, tylko raz, aby instalowały się same:",
+  "helperOff": "⚠ Został jeden krok, tylko raz, aby instalowały się same:",
   "helperStep1": "Kliknij „Otwórz folder rozszerzenia”, a na stronie, która się otworzy, kliknij ścieżkę obok „Załadowano z”.",
   "helperStep2": "Kliknij dwukrotnie „instalar-actualizador.cmd”. Jeśli Windows zapyta, wybierz „Więcej informacji” › „Uruchom mimo to”.",
   "helperStep3": "Gotowe: ta sekcja sama zmieni się na „✓ Włączone”.",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Masz zapisane kontakty lub szablony?",
   "dataImportBackup": "Importuj kopię zapasową",
   "autoBackupOn": "✓ Automatyczna kopia na tym komputerze: jeśli usuniesz rozszerzenie i załadujesz je ponownie, kontakty i szablony wrócą same.",
-  "autoBackupOff": "Aby mieć też automatyczną kopię na tym komputerze, wykonaj krok w „Automatyczne aktualizacje” (niżej)."
+  "autoBackupOff": "Aby mieć też automatyczną kopię na tym komputerze, wykonaj krok w „Automatyczne aktualizacje” (niżej).",
+  "bannerNeedsHelper": "⬇ Dostępna jest wersja {latest}. Brakuje aktualizatora, aby zainstalowała się sama.",
+  "popupMaxSize": "Chrome nie pozwala powiększyć okienka bardziej (maks. 800 × 600). Aby mieć więcej miejsca, otwórz rozszerzenie w oknie (⧉)."
 };

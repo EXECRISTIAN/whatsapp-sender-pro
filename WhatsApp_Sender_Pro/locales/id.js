@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Mencari pembaruan…",
   "updateNetwork": "Tidak dapat menghubungi GitHub (offline).",
   "helperOn": "✓ Aktif: memeriksa sekali sehari dan setiap kali Anda membuka ekstensi, lalu memasang sendiri saat tidak digunakan.",
-  "helperOff": "Tinggal satu langkah, cukup sekali, agar pembaruan terpasang sendiri:",
+  "helperOff": "⚠ Tinggal satu langkah, cukup sekali, agar pembaruan terpasang sendiri:",
   "helperStep1": "Ketuk «Buka folder ekstensi» lalu, di halaman yang terbuka, klik jalur di samping «Dimuat dari».",
   "helperStep2": "Klik dua kali «instalar-actualizador.cmd». Jika Windows bertanya, pilih «Info selengkapnya» › «Tetap jalankan».",
   "helperStep3": "Selesai: bagian ini akan berubah sendiri menjadi «✓ Aktif».",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Apakah Anda punya kontak atau templat tersimpan?",
   "dataImportBackup": "Impor cadangan",
   "autoBackupOn": "✓ Salinan otomatis di PC ini: jika Anda menghapus ekstensi lalu memuatnya lagi, kontak dan templat kembali sendiri.",
-  "autoBackupOff": "Agar juga ada salinan otomatis di PC ini, selesaikan langkah «Pembaruan otomatis» (di bawah)."
+  "autoBackupOff": "Agar juga ada salinan otomatis di PC ini, selesaikan langkah «Pembaruan otomatis» (di bawah).",
+  "bannerNeedsHelper": "⬇ Versi {latest} tersedia. Pembaru belum dipasang, jadi versi ini tidak terpasang sendiri.",
+  "popupMaxSize": "Chrome tidak mengizinkan popup lebih besar (maks. 800 × 600). Untuk ruang lebih, buka ekstensi di jendela (⧉)."
 };

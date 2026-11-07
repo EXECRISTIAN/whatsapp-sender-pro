@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Hledání aktualizací…",
   "updateNetwork": "GitHub není dostupný (offline).",
   "helperOn": "✓ Zapnuté: kontroluje jednou denně a při každém otevření rozšíření a instaluje samo, když ho nepoužíváte.",
-  "helperOff": "Zbývá jeden krok, jen jednou, aby se aktualizace instalovaly samy:",
+  "helperOff": "⚠ Zbývá jeden krok, jen jednou, aby se aktualizace instalovaly samy:",
   "helperStep1": "Klikněte na „Otevřít složku rozšíření“ a na stránce, která se otevře, klikněte na cestu vedle „Načteno z“.",
   "helperStep2": "Dvakrát klikněte na „instalar-actualizador.cmd“. Pokud se Windows zeptají, zvolte „Další informace“ › „Přesto spustit“.",
   "helperStep3": "Hotovo: tato část se sama přepne na „✓ Zapnuté“.",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Měli jste uložené kontakty nebo šablony?",
   "dataImportBackup": "Importovat zálohu",
   "autoBackupOn": "✓ Automatická kopie v tomto počítači: když rozšíření odeberete a znovu načtete, kontakty a šablony se vrátí samy.",
-  "autoBackupOff": "Chcete-li mít i automatickou kopii v tomto počítači, proveďte krok v části „Automatické aktualizace“ (níže)."
+  "autoBackupOff": "Chcete-li mít i automatickou kopii v tomto počítači, proveďte krok v části „Automatické aktualizace“ (níže).",
+  "bannerNeedsHelper": "⬇ Je k dispozici verze {latest}. Aktualizátor zatím není nainstalovaný, takže se sama nenainstaluje.",
+  "popupMaxSize": "Chrome nedovolí vyskakovací okno dál zvětšit (max. 800 × 600). Pro víc místa otevřete rozšíření v okně (⧉)."
 };

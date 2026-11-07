@@ -109,7 +109,7 @@ export default {
   "updateChecking": "Suche nach Updates…",
   "updateNetwork": "GitHub nicht erreichbar (offline).",
   "helperOn": "✓ Aktiv: sucht einmal täglich und bei jedem Öffnen der Erweiterung und installiert selbst, wenn du sie nicht nutzt.",
-  "helperOff": "Es fehlt noch ein Schritt, nur einmal, damit sie sich selbst installieren:",
+  "helperOff": "⚠ Es fehlt noch ein Schritt, nur einmal, damit sie sich selbst installieren:",
   "helperStep1": "Tippe auf „Ordner der Erweiterung öffnen“ und klicke auf der geöffneten Seite auf den Pfad neben „Geladen aus“.",
   "helperStep2": "Doppelklicke auf „instalar-actualizador.cmd“. Falls Windows fragt, wähle „Weitere Informationen“ › „Trotzdem ausführen“.",
   "helperStep3": "Fertig: Dieser Bereich wechselt von selbst zu „✓ Aktiv“.",
@@ -129,5 +129,7 @@ export default {
   "dataFreshInstall": "Hattest du gespeicherte Kontakte oder Vorlagen?",
   "dataImportBackup": "Sicherung importieren",
   "autoBackupOn": "✓ Automatische Kopie auf diesem PC: Wenn du die Erweiterung entfernst und neu lädst, kommen deine Kontakte und Vorlagen von selbst zurück.",
-  "autoBackupOff": "Für eine zusätzliche automatische Kopie auf diesem PC führe den Schritt bei „Automatische Updates“ (unten) aus."
+  "autoBackupOff": "Für eine zusätzliche automatische Kopie auf diesem PC führe den Schritt bei „Automatische Updates“ (unten) aus.",
+  "bannerNeedsHelper": "⬇ Version {latest} ist verfügbar. Der Updater ist noch nicht installiert, daher installiert sie sich nicht selbst.",
+  "popupMaxSize": "Chrome lässt das Popup nicht größer werden (max. 800 × 600). Für mehr Platz öffne die Erweiterung in einem Fenster (⧉)."
 };
