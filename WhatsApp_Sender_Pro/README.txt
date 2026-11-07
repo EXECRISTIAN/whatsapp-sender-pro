@@ -48,7 +48,7 @@ Configuración (⚙)
   acepta también las listas de contactos exportadas por versiones anteriores.
   Desde el popup, Importar abre la ventana para elegir el archivo (Chrome
   cierra el popup al abrir el selector de archivos).
-- Idioma (51 idiomas, todos los de la interfaz de Chrome, o Automático según Chrome), tema, color, imagen de
+- Idioma (51 idiomas, o Automático según Chrome), tema, color, imagen de
   fondo y zoom. Árabe, hebreo, persa y urdu se muestran de derecha a izquierda.
 
 Actualizaciones automáticas
