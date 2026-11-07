@@ -1,4 +1,4 @@
-WhatsApp Sender Pro 1.9.2
+WhatsApp Sender Pro 1.9.3
 =========================
 
 Abre chats de WhatsApp desde Chrome sin agendar el número. El mensaje queda
@@ -27,7 +27,7 @@ Funciones
 - Menú contextual: seleccioná un número en cualquier página y clic derecho.
 
 Tamaño
-- Arrastrá la esquina inferior derecha del popup para cambiar el tamaño
+- Arrastrá cualquiera de las dos esquinas inferiores del popup para cambiar el tamaño
   (hasta 800 × 600, el máximo que permite Chrome). Se guarda solo.
   Doble clic en la esquina lo vuelve al tamaño original.
 - La ventana (botón ⧉) recuerda su tamaño y posición. Con ancho suficiente,

@@ -38,7 +38,7 @@ const charCount = qs('#charCount');
 const libSearch = qs('#libSearch');
 const libList = qs('#libList');
 const libNew = qs('#btnLibNew');
-const grip = qs('#resizeGrip');
+const grips = [qs('#resizeGrip'), qs('#resizeGripLeft')];
 
 // Settings dialog
 const dlgSettings = qs('#dlgSettings');
@@ -390,15 +390,14 @@ function applyUI(){
   if (inWindow) { document.body.classList.add('in-window'); return; }
   document.body.style.width = ui.width + 'px';
   document.body.style.height = ui.height + 'px';
-  grip.classList.toggle('left', ui.anchor === 'right');
 }
-grip.addEventListener('pointerdown', e => {
+// One grip in each bottom corner: dragging either one outwards makes the popup wider
+for (const grip of grips) grip.addEventListener('pointerdown', e => {
   if (inWindow || e.button !== 0) return;
   e.preventDefault();
   grip.setPointerCapture(e.pointerId);
-  const start = { x: e.screenX, y: e.screenY, w: ui.width, h: ui.height, left: window.screenX };
-  // Popups anchored to the right edge grow to the left: then the grip sits bottom-left and moves the other way
-  let dir = ui.anchor === 'right' ? -1 : 1;
+  const start = { x: e.screenX, y: e.screenY, w: ui.width, h: ui.height };
+  const dir = grip.dataset.side === 'left' ? -1 : 1;
   const move = ev => {
     ui.width = clamp(start.w + dir * (ev.screenX - start.x), POPUP.minW, POPUP.maxW);
     ui.height = clamp(start.h + ev.screenY - start.y, POPUP.minH, POPUP.maxH);
@@ -408,7 +407,6 @@ grip.addEventListener('pointerdown', e => {
     grip.removeEventListener('pointermove', move);
     grip.removeEventListener('pointerup', up);
     grip.removeEventListener('pointercancel', up);
-    if (ui.width !== start.w && window.screenX !== start.left) ui.anchor = ui.width > start.w === window.screenX < start.left ? 'right' : 'left';
     applyUI();
     await saveUI();
   };
@@ -422,7 +420,7 @@ async function resetSize(){
   await saveUI();
   await chrome.storage.local.remove('wa_window');
 }
-grip.addEventListener('dblclick', resetSize);
+for (const grip of grips) grip.addEventListener('dblclick', resetSize);
 qs('#btnResetSize').addEventListener('click', resetSize);
 
 // Settings
@@ -642,7 +640,7 @@ document.addEventListener('keydown', (e)=>{
   bgImage.classList.toggle('hidden', !inWindow);
   bgHint.textContent = t(inWindow ? 'backgroundHint' : 'backgroundWindowHint');
   qs('#btnOpenWindow').classList.toggle('hidden', inWindow);
-  grip.classList.toggle('hidden', inWindow);
+  for (const grip of grips) grip.classList.toggle('hidden', inWindow);
   setPlatformUI(); renderLibrary(); updateCharCount(); updatePhoneFeedback();
   applyAppearance(settings, background); applyUI();
   phoneField.input.focus();

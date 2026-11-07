@@ -191,7 +191,7 @@ code { font-size: 11px; user-select: all; }
 
 /* Resize grip */
 .resize-grip { position: fixed; right: 0; bottom: 0; width: 16px; height: 16px; cursor: nwse-resize; z-index: 60; touch-action: none;
-  background: linear-gradient(135deg, transparent 50%, var(--muted) 50%, var(--muted) 56%, transparent 56%, transparent 70%, var(--muted) 70%, var(--muted) 76%, transparent 76%); opacity: .7; }
+  background: linear-gradient(135deg, transparent 50%, var(--muted) 50%, var(--muted) 56%, transparent 56%, transparent 70%, var(--muted) 70%, var(--muted) 76%, transparent 76%); opacity: .9; }
 .resize-grip.left { right: auto; left: 0; cursor: nesw-resize; transform: scaleX(-1); }
 .resize-grip:hover { opacity: 1; }
 
