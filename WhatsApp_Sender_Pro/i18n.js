@@ -29,8 +29,30 @@ import hu from './locales/hu.js';
 import sv from './locales/sv.js';
 import ms from './locales/ms.js';
 import sw from './locales/sw.js';
+import ca from './locales/ca.js';
+import da from './locales/da.js';
+import fi from './locales/fi.js';
+import et from './locales/et.js';
+import lt from './locales/lt.js';
+import lv from './locales/lv.js';
+import sk from './locales/sk.js';
+import sl from './locales/sl.js';
+import hr from './locales/hr.js';
+import sr from './locales/sr.js';
+import bg from './locales/bg.js';
+import nb from './locales/nb.js';
+import fil from './locales/fil.js';
+import am from './locales/am.js';
+import zhTW from './locales/zh-TW.js';
+import gu from './locales/gu.js';
+import kn from './locales/kn.js';
+import ml from './locales/ml.js';
+import mr from './locales/mr.js';
+import ta from './locales/ta.js';
+import te from './locales/te.js';
 
-const STRINGS = { es, en, pt, fr, de, it, nl, pl, ru, uk, tr, ar, fa, hi, bn, ur, id, vi, th, zh, ja, ko, he, el, cs, ro, hu, sv, ms, sw };
+const STRINGS = { es, en, pt, fr, de, it, nl, pl, ru, uk, tr, ar, fa, hi, bn, ur, id, vi, th, zh, ja, ko, he, el, cs, ro, hu, sv, ms, sw,
+  ca, da, fi, et, lt, lv, sk, sl, hr, sr, bg, nb, fil, am, 'zh-TW': zhTW, gu, kn, ml, mr, ta, te };
 
 // Shown in Settings with each language's own name
 export const LANGUAGES = [
@@ -39,12 +61,15 @@ export const LANGUAGES = [
   ['tr', 'Türkçe'], ['ar', 'العربية'], ['fa', 'فارسی'], ['hi', 'हिन्दी'], ['bn', 'বাংলা'], ['ur', 'اردو'],
   ['id', 'Bahasa Indonesia'], ['vi', 'Tiếng Việt'], ['th', 'ไทย'], ['zh', '中文（简体）'], ['ja', '日本語'], ['ko', '한국어'],
   ['he', 'עברית'], ['el', 'Ελληνικά'], ['cs', 'Čeština'], ['ro', 'Română'], ['hu', 'Magyar'], ['sv', 'Svenska'],
-  ['ms', 'Bahasa Melayu'], ['sw', 'Kiswahili']
+  ['ms', 'Bahasa Melayu'], ['sw', 'Kiswahili'], ['ca', 'Català'], ['da', 'Dansk'], ['fi', 'Suomi'], ['et', 'Eesti'],
+  ['lt', 'Lietuvių'], ['lv', 'Latviešu'], ['sk', 'Slovenčina'], ['sl', 'Slovenščina'], ['hr', 'Hrvatski'], ['sr', 'Српски'],
+  ['bg', 'Български'], ['nb', 'Norsk bokmål'], ['fil', 'Filipino'], ['am', 'አማርኛ'], ['zh-TW', '中文（繁體）'],
+  ['gu', 'ગુજરાતી'], ['kn', 'ಕನ್ನಡ'], ['ml', 'മലയാളം'], ['mr', 'मराठी'], ['ta', 'தமிழ்'], ['te', 'తెలుగు']
 ].map(([code, name]) => ({ code, name }));
 
 const RTL = new Set(['ar', 'fa', 'ur', 'he']);
 // Older names some systems still report
-const ALIASES = { iw: 'he', in: 'id', fil: 'en', nb: 'en', no: 'en' };
+const ALIASES = { iw: 'he', in: 'id', tl: 'fil', no: 'nb', nn: 'nb', 'zh-hk': 'zh-TW', 'zh-mo': 'zh-TW', 'zh-hant': 'zh-TW', 'zh-cn': 'zh', 'zh-sg': 'zh', 'zh-hans': 'zh' };
 
 let current = 'es';
 
@@ -52,10 +77,11 @@ export const getLang = () => current;
 export const isRtl = () => RTL.has(current);
 
 export function setLang(lang){
-  const wanted = String(lang === 'auto' || !lang ? chrome.i18n.getUILanguage() : lang).toLowerCase();
-  const first = wanted.split(/[-_]/)[0];
-  const base = ALIASES[first] && !STRINGS[first] ? ALIASES[first] : first;
-  current = STRINGS[wanted] ? wanted : STRINGS[base] ? base : 'en';
+  const wanted = String(lang === 'auto' || !lang ? chrome.i18n.getUILanguage() : lang).replace('_', '-').toLowerCase();
+  const first = wanted.split('-')[0];
+  // Codes are matched without case (zh-TW, zh-tw); old or regional codes go to the closest language
+  const find = code => Object.keys(STRINGS).find(k => k.toLowerCase() === String(code || '').toLowerCase());
+  current = find(wanted) || find(ALIASES[wanted]) || find(first) || find(ALIASES[first]) || 'en';
   return current;
 }
 
