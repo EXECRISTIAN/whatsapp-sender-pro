@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Simplified for 16-32 px: bigger bubble, solid arrow, no fold line -->
+  <rect x="0" y="0" width="256" height="256" rx="56" fill="#13A866"/>
+  <path d="M128 30c-58 0-102 38-102 86 0 25 12 47 32 63l-12 46 46-24c11 3 23 5 36 5 58 0 102-38 102-90S186 30 128 30z" fill="#fff"/>
+  <path d="M62 120 196 66 158 190 130 146z" fill="#0E8A57"/>
+</svg>

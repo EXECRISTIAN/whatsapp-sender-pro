@@ -1,4 +1,4 @@
-WhatsApp Sender Pro 1.10.0
+WhatsApp Sender Pro 1.10.1
 =========================
 
 Abre chats de WhatsApp desde Chrome sin agendar el número. El mensaje queda

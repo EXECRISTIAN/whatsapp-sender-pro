@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- WhatsApp Sender Pro: chat bubble with a send arrow -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2FD872"/>
+      <stop offset="1" stop-color="#0B7A5C"/>
+    </linearGradient>
+    <linearGradient id="ink" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1FBF64"/>
+      <stop offset="1" stop-color="#0B7A5C"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="240" height="240" rx="60" fill="url(#bg)"/>
+  <path d="M128 46c-51 0-92 34-92 77 0 23 12 43 30 57l-10 32 39-19c10 3 21 5 33 5 51 0 92-33 92-75s-41-77-92-77z" fill="#fff"/>
+  <path d="M78 122 182 78 152 174 126 140z" fill="url(#ink)"/>
+  <path d="M126 140 182 78" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+</svg>
