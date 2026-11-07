@@ -99,8 +99,8 @@
         <button id="btnCloseSettings" type="button" class="btn-mini" data-i18n-title="exit"><span aria-hidden="true">✕</span> <span data-i18n="exit"></span></button>
       </div>
       <div class="row">
-        <label for="defaultCountry" data-i18n="countryLabel"></label>
-        <select id="defaultCountry"></select>
+        <label for="defaultCountryInput" data-i18n="countryLabel"></label>
+        <div id="defaultCountry" data-input-id="defaultCountryInput"></div>
         <div class="hint" data-i18n="countryHint"></div>
       </div>
       <div class="row">
@@ -109,10 +109,8 @@
         <div class="hint" data-i18n="areaHint"></div>
       </div>
       <div class="row">
-        <label for="langSelect" data-i18n="language"></label>
-        <select id="langSelect">
-          <option value="auto" data-i18n="langAuto"></option>
-        </select>
+        <label for="langSelectInput" data-i18n="language"></label>
+        <div id="langSelect" data-input-id="langSelectInput"></div>
       </div>
 
       <hr/>
@@ -128,6 +126,20 @@
       <div id="dataHint" class="hint"></div>
       <div id="autoBackupInfo" class="hint"></div>
       <input id="importInput" type="file" accept=".json,application/json" class="hidden" />
+
+      <hr/>
+      <h4 id="locationTitle" data-i18n="locationSection"></h4>
+      <div id="locationCurrent" class="hint"></div>
+      <div id="locationControls" class="hidden">
+        <div class="two-buttons">
+          <select id="locationDrive" data-i18n-label="locationSection"></select>
+          <button id="btnPickFolder" type="button" class="btn-mini" data-i18n="locationPick"></button>
+        </div>
+        <div id="locationTarget" class="hint path-hint"></div>
+        <button id="btnMoveHere" type="button" class="primary install-btn" data-i18n="locationMove"></button>
+      </div>
+      <div id="locationResult" class="hint path-hint hidden"></div>
+      <button id="btnOpenExtensions" type="button" class="btn-mini hidden" data-i18n="locationOpenExtensions"></button>
 
       <hr/>
       <h4 id="updatesTitle" data-i18n="updatesSection"></h4>
@@ -215,6 +227,14 @@
         <button type="submit" class="btn-mini primary" data-i18n="save"></button>
       </div>
     </form>
+  </dialog>
+
+  <dialog id="dlgDefaultCountry" class="small-dialog">
+    <p id="defaultCountryQuestion" class="dialog-question"></p>
+    <div class="two-buttons">
+      <button id="btnKeepCountry" type="button" class="primary" data-i18n="defaultCountryYes"></button>
+      <button id="btnSkipCountry" type="button" data-i18n="defaultCountryNo"></button>
+    </div>
   </dialog>
 
   <dialog id="dlgTemplate">

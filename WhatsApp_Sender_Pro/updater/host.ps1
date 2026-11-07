@@ -1,14 +1,18 @@
-﻿# WhatsApp Sender Pro - native helper that replaces the extension files with a newer GitHub release.
-# Chrome starts it through host.bat (native messaging): one JSON message in, one JSON message out.
-# Only this extension may call it (allowed_origins), it only downloads from the project's GitHub
-# releases, and it only writes into the folder recorded at install time, after checking that the
-# folder holds this extension at the version Chrome is running.
+﻿# WhatsApp Sender Pro - native helper: installs newer GitHub releases, keeps a copy of the data and
+# moves the extension to its own folder. Chrome starts it through host.bat (native messaging): one
+# JSON message in, one JSON message out. Only this extension may call it (allowed_origins), it only
+# downloads from the project's GitHub releases, and it only writes into the folder Chrome loads the
+# extension from (read from Chrome's preferences) after checking it holds this extension at the
+# version Chrome is running.
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
 $Repo = 'EXECRISTIAN/whatsapp-sender-pro'
 $AppName = 'WhatsApp Sender Pro'
-$HostVersion = '2'
+$HostVersion = '3'
+$FolderName = 'WhatsApp Sender Pro'
+# Fixed ID from the "key" in manifest.json (the same in any folder)
+$ExtensionIds = @('gemleaglcoamjgkmckdhnbanhccogpjb')
 $Root = Join-Path $env:LOCALAPPDATA 'WhatsAppSenderPro'
 $LogFile = Join-Path $Root 'updater.log'
 
@@ -56,18 +60,113 @@ function Get-Config {
   return Get-Content -LiteralPath (Join-Path $PSScriptRoot 'config.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 }
 
+function Save-Config([string]$dir) {
+  $file = Join-Path $PSScriptRoot 'config.json'
+  $config = Get-Config
+  $config.extensionDir = $dir
+  [IO.File]::WriteAllText($file, ($config | ConvertTo-Json), (New-Object Text.UTF8Encoding $false))
+}
+
+# Folders Chrome loads this extension from, read from every profile's preferences (read only)
+function Get-LoadedDirs {
+  $dirs = @()
+  try { Add-Type -AssemblyName System.Web.Extensions } catch { return $dirs }
+  $json = New-Object System.Web.Script.Serialization.JavaScriptSerializer
+  $json.MaxJsonLength = [int]::MaxValue
+  $ids = @($ExtensionIds + @((Get-Config).ids)) | Where-Object { $_ } | Select-Object -Unique
+  $userData = Join-Path $env:LOCALAPPDATA 'Google\Chrome\User Data'
+  if (-not (Test-Path -LiteralPath $userData)) { return $dirs }
+  foreach ($profile in Get-ChildItem -LiteralPath $userData -Directory -ErrorAction SilentlyContinue) {
+    foreach ($name in 'Secure Preferences', 'Preferences') {
+      $file = Join-Path $profile.FullName $name
+      if (-not (Test-Path -LiteralPath $file)) { continue }
+      try {
+        $prefs = $json.DeserializeObject([IO.File]::ReadAllText($file, [Text.Encoding]::UTF8))
+        $settings = $prefs['extensions']['settings']
+        foreach ($id in $ids) {
+          if ($settings -and $settings.ContainsKey($id) -and $settings[$id].ContainsKey('path')) {
+            $path = [string]$settings[$id]['path']
+            if ([IO.Path]::IsPathRooted($path) -and (Test-Path -LiteralPath (Join-Path $path 'manifest.json'))) { $dirs += $path }
+          }
+        }
+      } catch {}
+    }
+  }
+  return @($dirs | Select-Object -Unique)
+}
+
+# The folder to work on: the one Chrome loads at the running version, else the one recorded at install
+function Get-ExtensionDir([string]$current) {
+  foreach ($dir in Get-LoadedDirs) {
+    $m = Read-Manifest $dir
+    if ($m -and $m.name -eq $AppName -and (-not $current -or $m.version -eq $current)) {
+      if ($dir -ne [string](Get-Config).extensionDir) { try { Save-Config $dir } catch {} }
+      return $dir
+    }
+  }
+  return [string](Get-Config).extensionDir
+}
+
+function Get-Drives {
+  return @([IO.DriveInfo]::GetDrives() | Where-Object { $_.IsReady -and ($_.DriveType -eq 'Fixed' -or $_.DriveType -eq 'Removable') } | ForEach-Object {
+    @{ name = $_.Name.TrimEnd('\'); label = [string]$_.VolumeLabel; free = [double]$_.AvailableFreeSpace; total = [double]$_.TotalSize }
+  })
+}
+
+function Get-Location($msg) {
+  $current = Get-ExtensionDir ([string]$msg.current)
+  return @{ ok = $true; current = $current; drives = @(Get-Drives); folderName = $FolderName; systemDrive = $env:SystemDrive }
+}
+
+# Windows folder picker, on top of Chrome
+function Select-Folder {
+  Add-Type -AssemblyName System.Windows.Forms
+  $owner = New-Object System.Windows.Forms.Form -Property @{ TopMost = $true; ShowInTaskbar = $false }
+  $dialog = New-Object System.Windows.Forms.FolderBrowserDialog
+  $dialog.Description = "Elegí dónde guardar $AppName (adentro se crea la carpeta '$FolderName')"
+  $dialog.ShowNewFolderButton = $true
+  try {
+    if ($dialog.ShowDialog($owner) -eq [System.Windows.Forms.DialogResult]::OK) { return @{ ok = $true; path = $dialog.SelectedPath } }
+    return @{ ok = $false; cancelled = $true }
+  } finally { $owner.Dispose() }
+}
+
+# Copies the running extension into <base>\WhatsApp Sender Pro; Chrome then loads it from there
+function Move-Extension($msg) {
+  $source = Get-ExtensionDir ([string]$msg.current)
+  $installed = Read-Manifest $source
+  if (-not $installed -or $installed.name -ne $AppName) { throw 'No se encontró la carpeta de la extensión.' }
+  $base = [string]$msg.base
+  if (-not [IO.Path]::IsPathRooted($base)) { throw 'Ubicación no válida.' }
+  if ((Split-Path -Leaf $base) -eq $FolderName) { $target = $base } else { $target = Join-Path $base $FolderName }
+  $target = [IO.Path]::GetFullPath($target).TrimEnd('\')
+  $src = [IO.Path]::GetFullPath($source).TrimEnd('\')
+  if ($target -eq $src) { return @{ ok = $true; path = $target; same = $true } }
+  if ($target.StartsWith($src + '\', [StringComparison]::OrdinalIgnoreCase)) { throw 'La carpeta nueva no puede estar dentro de la actual.' }
+  if (Test-Path -LiteralPath $target) {
+    $existing = Read-Manifest $target
+    $hasFiles = @(Get-ChildItem -LiteralPath $target -Force -ErrorAction SilentlyContinue).Count -gt 0
+    if ($hasFiles -and (-not $existing -or $existing.name -ne $AppName)) { throw "La carpeta $target ya tiene otros archivos." }
+  }
+  New-Item -ItemType Directory -Path $target -Force | Out-Null
+  if (-not (Invoke-Robocopy $src $target)) { throw 'No se pudieron copiar los archivos.' }
+  $copied = Read-Manifest $target
+  if (-not $copied -or $copied.version -ne $installed.version) { throw 'La copia quedó incompleta.' }
+  Save-Config $target
+  return @{ ok = $true; path = $target; previous = $src }
+}
+
 function Invoke-Robocopy([string]$from, [string]$to) {
   & robocopy.exe $from $to /MIR /R:2 /W:1 /NFL /NDL /NJH /NJS /NP | Out-Null
   return $LASTEXITCODE -lt 8
 }
 
 function Update-Extension($msg) {
-  $config = Get-Config
-  $ext = [string]$config.extensionDir
+  $ext = Get-ExtensionDir ([string]$msg.current)
   $installed = Read-Manifest $ext
-  if (-not $installed -or $installed.name -ne $AppName) { throw 'La carpeta registrada no contiene la extensión.' }
+  if (-not $installed -or $installed.name -ne $AppName) { throw 'No se encontró la carpeta de la extensión.' }
   if ($msg.current -and $installed.version -ne [string]$msg.current) {
-    throw "La carpeta registrada tiene la versión $($installed.version), pero Chrome usa la $($msg.current). Volvé a ejecutar instalar-actualizador.cmd desde la carpeta que cargaste en Chrome."
+    throw "La carpeta $ext tiene la versión $($installed.version), pero Chrome usa la $($msg.current). Volvé a ejecutar INSTALAR.cmd."
   }
   $url = [string]$msg.url
   if (-not $url.StartsWith("https://github.com/$Repo/releases/download/")) { throw 'Dirección de descarga no permitida.' }
@@ -134,9 +233,17 @@ try {
   if (-not $msg) { exit 0 }
   switch ([string]$msg.action) {
     'ping' {
-      $config = Get-Config
-      $manifest = Read-Manifest ([string]$config.extensionDir)
-      Send-Message @{ ok = $true; host = $HostVersion; extensionDir = [string]$config.extensionDir; installed = $(if ($manifest) { [string]$manifest.version } else { '' }) }
+      $dir = Get-ExtensionDir ([string]$msg.current)
+      $manifest = Read-Manifest $dir
+      Send-Message @{ ok = $true; host = $HostVersion; extensionDir = $dir; installed = $(if ($manifest) { [string]$manifest.version } else { '' }) }
+    }
+    'location' { Send-Message (Get-Location $msg) }
+    'pickFolder' { Send-Message (Select-Folder) }
+    'relocate' {
+      Write-Log "Moviendo la extensión a $($msg.base)"
+      $result = Move-Extension $msg
+      Write-Log "Copiada a $($result.path)"
+      Send-Message $result
     }
     'update' {
       Write-Log "Actualizando a $($msg.version) desde $($msg.url)"

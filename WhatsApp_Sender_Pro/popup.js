@@ -1,6 +1,8 @@
 import { COUNTRIES, RATE_LIMIT, applyAppearance, buildBackup, buildUrl, callingCode, filterContacts, filterTemplates, flagEmoji, formatPhone, loadAppearance, loadPhoneDefaults, mergeContacts, mergeTemplates, normalizeSettings, onlyDigits, openChat, parseBackup, recentOpens, registerChat, setupEmojiPanel, showToast } from './shared.js';
 import { LANGUAGES, getLang, setLang, t, translatePage } from './i18n.js';
 import { createPhoneField } from './phone-field.js';
+import { countryNames, countrySearchText, fold, languageNames, languageSearchText } from './names.js';
+import { createPicker } from './picker.js';
 import { RELEASES_URL, compareVersions } from './updater.js';
 
 // Helpers & storage
@@ -42,10 +44,20 @@ const grips = [qs('#resizeGrip'), qs('#resizeGripLeft')];
 
 // Settings dialog
 const dlgSettings = qs('#dlgSettings');
-const langSelect = qs('#langSelect');
-for (const { code, name } of LANGUAGES) langSelect.add(new Option(name, code));
+// Settings: language and default country are typed into, with names as natives write them
+const pickerItems = new Map();
+function memo(key, build){ const k = `${key}|${getLang()}`; if (!pickerItems.has(k)) pickerItems.set(k, build()); return pickerItems.get(k); }
+const languageItems = () => memo('lang', () => [
+  { value: 'auto', label: t('langAuto'), search: fold(`auto automatic automatico ${t('langAuto')}`) },
+  ...LANGUAGES.map(({ code }) => { const n = languageNames(code); return { value: code, label: n.native, sub: n.local, search: languageSearchText(code) }; })
+    .sort((a, b) => a.sub.localeCompare(b.sub, getLang()))
+]);
+const countryItems = () => memo('country', () => COUNTRIES
+  .map(code => { const n = countryNames(code); return { value: code, label: n.native, sub: n.local, prefix: flagEmoji(code), right: `+${n.dial}`, search: countrySearchText(code) }; })
+  .sort((a, b) => a.sub.localeCompare(b.sub, getLang())));
+const langSelect = createPicker(qs('#langSelect'), { items: languageItems, value: 'auto', placeholder: () => t('searchLanguage'), empty: () => t('noLanguages') });
 const defaultArea = qs('#defaultArea');
-const defaultCountry = qs('#defaultCountry');
+const defaultCountry = createPicker(qs('#defaultCountry'), { items: countryItems, value: 'AR', placeholder: () => t('searchCountry'), empty: () => t('noCountries') });
 const themeMode = qs('#themeMode');
 const accentColor = qs('#accentColor');
 const outlineColor = qs('#outlineColor');
@@ -451,16 +463,11 @@ async function openSettings(focusData = false, scrollTo = ''){
   qs('#versionBadge').title = t('versionTitle');
   dlgSettings.showModal();
   renderUpdate(); // starts watching for the updater setup while Settings is open
+  refreshLocationUI();
   if (scrollTo) qs(scrollTo).scrollIntoView({ block: 'start' });
   if (focusData) { qs('#btnImport').scrollIntoView({ block: 'center' }); qs('#btnImport').focus(); showToast(t('importWindow')); }
 }
 function fillCountrySelect(selected){
-  const names = new Intl.DisplayNames([getLang()], { type: 'region' });
-  defaultCountry.innerHTML = '';
-  COUNTRIES
-    .map(code => ({ code, name: names.of(code) || code }))
-    .sort((a,b) => a.name.localeCompare(b.name, getLang()))
-    .forEach(c => defaultCountry.add(new Option(`${flagEmoji(c.code)} ${c.name} (+${callingCode(c.code)})`, c.code)));
   defaultCountry.value = selected;
 }
 qs('#btnCloseSettings').addEventListener('click', () => dlgSettings.close());
@@ -484,6 +491,7 @@ qs('#btnSaveSettings').addEventListener('click', async ()=>{
   const { country: oldCountry } = await loadPhoneDefaults();
   const country = defaultCountry.value || oldCountry;
   await setSync({ wa_settings: settings, wa_ui: ui, wa_defaultArea: area, wa_defaultCountry: country });
+  defaultCountryNow = country;
   phoneField.setArea(area); contactField.setArea(area);
   if (country !== oldCountry) { phoneField.setCountry(country); contactField.setCountry(country); }
   setLang(settings.lang);
@@ -640,7 +648,99 @@ qs('#btnOpenFolder').addEventListener('click', () => chrome.tabs.create({ url: `
 qs('#btnCheckUpdate').addEventListener('click', () => refreshUpdate(true));
 qs('#btnReleases').addEventListener('click', () => chrome.tabs.create({ url: RELEASES_URL }));
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'local' && changes.wa_update) { updateState = changes.wa_update.newValue || {}; renderUpdate(); }
+  if (area === 'local' && changes.wa_update) { updateState = changes.wa_update.newValue || {}; renderUpdate(); renderLocation(); }
+  if (area === 'local' && changes.wa_location) { locState = changes.wa_location.newValue || {}; renderLocation(); }
+});
+
+// Picking another country in the phone field offers to keep it as the default, so nobody has to find
+// that setting; after 3 "no" (or once accepted) it stops asking.
+const COUNTRY_PROMPT_LIMIT = 3;
+let defaultCountryNow = '';
+async function offerDefaultCountry(code){
+  const { wa_countryPrompt = {} } = await chrome.storage.sync.get(['wa_countryPrompt']);
+  if (wa_countryPrompt.done || (wa_countryPrompt.declined || 0) >= COUNTRY_PROMPT_LIMIT || code === defaultCountryNow) return;
+  const dlg = qs('#dlgDefaultCountry');
+  const country = `${flagEmoji(code)} ${countryNames(code).native}`;
+  qs('#defaultCountryQuestion').textContent = t('defaultCountryAsk', { country });
+  const yes = await new Promise(resolve => {
+    const finish = answer => { dlg.close(); resolve(answer); };
+    qs('#btnKeepCountry').onclick = () => finish(true);
+    qs('#btnSkipCountry').onclick = () => finish(false);
+    dlg.oncancel = e => { e.preventDefault(); finish(false); };
+    dlg.showModal();
+    qs('#btnKeepCountry').focus();
+  });
+  if (yes) {
+    defaultCountryNow = code;
+    await setSync({ wa_defaultCountry: code, wa_countryPrompt: { ...wa_countryPrompt, done: true } });
+    showToast(t('defaultCountrySaved', { country }));
+  } else {
+    await setSync({ wa_countryPrompt: { ...wa_countryPrompt, declined: (wa_countryPrompt.declined || 0) + 1 } });
+  }
+  phoneField.input.focus();
+}
+
+// Settings › Location: where the program's files are kept (its own folder, e.g. C:\WhatsApp Sender Pro)
+let locState = {};
+const locDrive = qs('#locationDrive');
+const samePath = (a, b) => String(a || '').replace(/[\\/]+$/, '').toLowerCase() === String(b || '').replace(/[\\/]+$/, '').toLowerCase();
+const gigabytes = bytes => bytes >= 1e12
+  ? new Intl.NumberFormat(getLang(), { style: 'unit', unit: 'terabyte', maximumFractionDigits: 1 }).format(bytes / 1e12)
+  : new Intl.NumberFormat(getLang(), { style: 'unit', unit: 'gigabyte', maximumFractionDigits: bytes < 10e9 ? 1 : 0 }).format(bytes / 1e9);
+function locationTarget(){
+  const base = String(locDrive.value || '').replace(/[\\/]+$/, '');
+  if (!base) return '';
+  const name = locState.folderName || 'WhatsApp Sender Pro';
+  return base.split(/[\\/]/).pop() === name ? base : `${base}\\${name}`;
+}
+function renderLocation(){
+  const s = locState, helper = !!updateState.helper;
+  qs('#locationCurrent').textContent = !helper ? t('locationNeedsHelper') : s.current ? t('locationCurrent', { path: s.current }) : t('locationChecking');
+  qs('#locationControls').classList.toggle('hidden', !helper || !s.drives);
+  if (helper && s.drives) {
+    const options = s.drives.map(d => ({ value: `${d.name}\\`, label: t('locationFree', { drive: d.label ? `${d.name} (${d.label})` : d.name, free: gigabytes(d.free) }) }));
+    if (s.base && !options.some(o => samePath(o.value, s.base))) options.push({ value: s.base, label: `📁 ${s.base}` });
+    const wanted = s.base || `${s.systemDrive || 'C:'}\\`;
+    locDrive.innerHTML = '';
+    options.forEach(o => locDrive.add(new Option(o.label, o.value)));
+    locDrive.value = options.find(o => samePath(o.value, wanted))?.value || options[0]?.value || '';
+    const target = locationTarget();
+    const same = samePath(target, s.current);
+    qs('#locationTarget').textContent = same ? t('locationSame') : t('locationTarget', { path: target });
+    qs('#btnMoveHere').disabled = same || s.status === 'moving';
+  }
+  const result = qs('#locationResult');
+  let text = '', openBtn = false;
+  if (s.status === 'moving') text = t('locationMoving');
+  else if (s.status === 'error') text = t('locationError', { error: s.error });
+  else if (s.status === 'moved' && s.moved) {
+    if (samePath(s.current, s.moved.path)) text = t('locationDone', { path: s.moved.path, previous: s.moved.previous });
+    else { text = t('locationMoved', { path: s.moved.path }); openBtn = true; }
+  }
+  result.textContent = text;
+  result.classList.toggle('hidden', !text);
+  qs('#btnOpenExtensions').classList.toggle('hidden', !openBtn);
+}
+async function refreshLocationUI(){
+  locState = (await getLocal(['wa_location'])).wa_location || {};
+  renderLocation();
+  if (updateState.helper) { try { locState = await chrome.runtime.sendMessage({ type: 'wa_location' }) || locState; } catch {} renderLocation(); }
+}
+locDrive.addEventListener('change', async () => {
+  locState = { ...locState, base: locDrive.value, status: locState.status === 'moving' ? 'moving' : '' };
+  await chrome.storage.local.set({ wa_location: locState });
+});
+// The popup may close while the Windows folder dialog is open; the choice is saved and shown next time
+qs('#btnPickFolder').addEventListener('click', () => { chrome.runtime.sendMessage({ type: 'wa_pickFolder' }).catch(() => {}); });
+qs('#btnMoveHere').addEventListener('click', async () => {
+  qs('#btnMoveHere').disabled = true;
+  try { locState = await chrome.runtime.sendMessage({ type: 'wa_relocate', base: locDrive.value }) || locState; } catch {}
+  renderLocation();
+});
+// Last step is Chrome's: load the new folder (path copied, ready to paste in the folder dialog)
+qs('#btnOpenExtensions').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(locState.moved?.path || ''); } catch {}
+  chrome.tabs.create({ url: 'chrome://extensions' });
 });
 
 // Window mode: opens with the size and position it had last time
@@ -678,7 +778,8 @@ document.addEventListener('keydown', (e)=>{
   if (!['contacts','templates','recents'].includes(ui.tab)) ui.tab = 'contacts';
   setLang(settings.lang);
   translatePage();
-  phoneField = createPhoneField(qs('#phoneField'), { ...phoneDefaults, onChange: updatePhoneFeedback });
+  defaultCountryNow = phoneDefaults.country;
+  phoneField = createPhoneField(qs('#phoneField'), { ...phoneDefaults, onChange: updatePhoneFeedback, onCountryPick: offerDefaultCountry });
   contactField = createPhoneField(qs('#contactPhoneField'), { ...phoneDefaults, onChange: () => { contactError.textContent = ''; } });
   phoneField.refreshLabels(); contactField.refreshLabels();
   phoneField.input.addEventListener('focus', checkClipboard);

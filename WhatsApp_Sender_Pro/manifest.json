@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "WhatsApp Sender Pro",
-  "version": "1.10.3",
+  "version": "1.11.0",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxvffcPA0SVQc5cWn0cpAjOWhj8DIlbRJbR+2MzuBkLkqS1ZvvDaSsT6BEYt1n3Lu+NHqOSlKRyv8FAfFy39oF9dPIXLEfMq9Yu++AYpRJHOkaMjzBGsV8Btvog623ETt7gL4UJyfms1Qi2bhMZDaj+ke/R+2CFC7EWOdEzVSrnUuGcBUlkBfpMU7WCMA7sIuHH/D+YA0S6seDj14MSvEYcBX1e76tsdt8oo7ARIBy4vYlfRk7ffx4OVEGb7ydwUJ8Bdip9dj0mEAEWD/Trw1G5lgrcEmE3zyMhNGcb/EfZGBu2vPTfh07A8VEbsXJqChkdouHzQckJhX4mzDEF5d9QIDAQAB",
   "description": "Abre chats de WhatsApp sin agendar el número, con agenda de contactos, notas y plantillas de texto.",
   "minimum_chrome_version": "116",

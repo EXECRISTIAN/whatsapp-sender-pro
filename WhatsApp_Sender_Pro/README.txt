@@ -1,4 +1,4 @@
-WhatsApp Sender Pro 1.10.3
+WhatsApp Sender Pro 1.11.0
 =========================
 
 Abre chats de WhatsApp desde Chrome sin agendar el número. El mensaje queda
@@ -34,7 +34,14 @@ Tamaño
   el mensaje queda a la izquierda y los contactos a la derecha.
 
 Configuración (⚙)
-- País predefinido: la extensión abre siempre con ese país.
+- País predefinido: la extensión abre siempre con ese país. Se escribe y se
+  busca en cualquier idioma ("spain", "espagne", "スペイン" encuentran España);
+  los nombres se muestran como los escribe un nativo. La primera vez que
+  elegís otro país en el teléfono, te pregunta si querés dejarlo como
+  predefinido (deja de preguntar después de 3 "No").
+- Ubicación del programa: muestra la carpeta actual y permite elegir el disco
+  o una carpeta y "Mover aquí". Después se carga la carpeta nueva en
+  chrome://extensions (la ruta queda copiada); los datos se conservan.
 - Código de área por defecto (opcional) para escribir números locales cortos.
 - Copia de seguridad: marcá Contactos, Plantillas o ambos, y Exportar o
   Importar. Importar agrega lo nuevo y actualiza los contactos existentes;
@@ -69,8 +76,10 @@ Actualizaciones automáticas
 Instalación (una sola vez)
 1. Descomprimí el ZIP en una carpeta que no vayas a borrar.
 2. Doble clic en "INSTALAR.cmd" (si Windows avisa: "Más información" >
-   "Ejecutar de todas formas"). Activa las actualizaciones automáticas,
-   copia la ruta de la carpeta y abre chrome://extensions.
+   "Ejecutar de todas formas"). Copia el programa a su propia carpeta
+   (C:\WhatsApp Sender Pro), activa las actualizaciones automáticas, copia
+   la ruta de esa carpeta y abre chrome://extensions. Después podés borrar
+   la carpeta que descargaste.
 3. En esa página: activá "Modo de desarrollador" (arriba a la derecha), clic
    en "Cargar descomprimida", pegá la ruta (Ctrl+V) en la barra de dirección
    de la ventana y elegí "Seleccionar carpeta".

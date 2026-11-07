@@ -104,6 +104,35 @@ export async function applyUpdate(){
   return setState({ status: 'failed', installRequested: false, error: (res && res.error) || 'unknown' });
 }
 
+// Install folder (Settings › Location): the helper knows where Chrome loads the extension and can copy it
+// to its own folder. Results are kept in storage because the popup closes when the folder dialog opens.
+const getLocation = async () => (await chrome.storage.local.get('wa_location')).wa_location || {};
+async function setLocation(patch){
+  const state = { ...(await getLocation()), ...patch };
+  await chrome.storage.local.set({ wa_location: state });
+  return state;
+}
+async function callHelper(msg){
+  try { return await chrome.runtime.sendNativeMessage(HOST, { ...msg, current: chrome.runtime.getManifest().version }) || { ok: false }; }
+  catch (e) { return { ok: false, error: e.message, noHelper: true }; }
+}
+export async function refreshLocation(){
+  const res = await callHelper({ action: 'location' });
+  if (!res.ok) return setLocation({ error: res.noHelper ? '' : (res.error || 'unknown'), checkedAt: Date.now() });
+  return setLocation({ current: res.current, drives: res.drives || [], folderName: res.folderName, systemDrive: res.systemDrive, error: '', checkedAt: Date.now() });
+}
+export async function pickFolder(){
+  const res = await callHelper({ action: 'pickFolder' });
+  return res.ok && res.path ? setLocation({ base: res.path }) : getLocation();
+}
+export async function relocate(base){
+  await setLocation({ status: 'moving', base, error: '' });
+  const res = await callHelper({ action: 'relocate', base });
+  if (!res.ok) return setLocation({ status: 'error', error: res.error || 'unknown' });
+  if (res.same) return setLocation({ status: 'same' });
+  return setLocation({ status: 'moved', moved: { path: res.path, previous: res.previous } });
+}
+
 export function setupUpdater(){
   const ensureDaily = async () => {
     if (!(await chrome.alarms.get(DAILY_ALARM))) chrome.alarms.create(DAILY_ALARM, { delayInMinutes: 1, periodInMinutes: 24 * 60 });
@@ -130,6 +159,9 @@ export function setupUpdater(){
     if (msg && msg.type === 'wa_requestInstall') { setState({ installRequested: true }).then(() => reply(true)); return true; }
     // Settings polls this while waiting for the one-time helper setup, so it turns green by itself
     if (msg && msg.type === 'wa_pingHelper') { pingHelper().then(helper => setState({ helper })).then(reply); return true; }
+    if (msg && msg.type === 'wa_location') { refreshLocation().then(reply); return true; }
+    if (msg && msg.type === 'wa_pickFolder') { pickFolder().then(reply); return true; }
+    if (msg && msg.type === 'wa_relocate') { relocate(String(msg.base || '')).then(reply); return true; }
     if (msg && msg.type === 'wa_dismissNotice') { setState({ notice: false }).then(() => reply(true)); return true; }
     return false;
   });

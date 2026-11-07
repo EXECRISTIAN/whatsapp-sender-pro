@@ -1,6 +1,7 @@
 // One phone input with a country picker (flag + calling code), like intl_phone_field
 import { COUNTRIES, callingCode, detectCountry, extractPhone, flagEmoji, parsePhone } from './shared.js';
 import { getLang, t } from './i18n.js';
+import { countryNames, countrySearchText, matches } from './names.js';
 
 const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
@@ -32,8 +33,8 @@ export function createPhoneField(root, { country, area = '', onChange = () => {}
   let names = null;
 
   function countryName(code){
-    if (!names) names = new Intl.DisplayNames([getLang()], { type: 'region' });
-    return names.of(code) || code;
+    const n = countryNames(code);
+    return n.native === n.local ? n.native : `${n.native} (${n.local})`;
   }
   function showCountry(code){
     current = code;
@@ -68,9 +69,9 @@ export function createPhoneField(root, { country, area = '', onChange = () => {}
     const q = fold(search.value.trim());
     const digits = q.replace(/\D/g, '');
     const items = COUNTRIES
-      .map(code => ({ code, name: countryName(code), dial: callingCode(code) }))
-      .filter(c => !q || fold(c.name).includes(q) || c.code.toLowerCase() === q || (digits && c.dial.startsWith(digits)))
-      .sort((a,b) => (b.code === current) - (a.code === current) || a.name.localeCompare(b.name, getLang()));
+      .map(code => ({ code, ...countryNames(code) }))
+      .filter(c => !q || matches(countrySearchText(c.code), q) || (digits && digits === q.replace(/^\+/, '') && c.dial.startsWith(digits)))
+      .sort((a,b) => (b.code === current) - (a.code === current) || a.local.localeCompare(b.local, getLang()));
     list.innerHTML = '';
     if (!items.length) {
       const empty = document.createElement('div');
@@ -84,7 +85,8 @@ export function createPhoneField(root, { country, area = '', onChange = () => {}
       item.setAttribute('aria-selected', String(c.code === current));
       item.dataset.code = c.code;
       const flag = document.createElement('span'); flag.className = 'flag'; flag.textContent = flagEmoji(c.code);
-      const name = document.createElement('span'); name.className = 'pf-name'; name.textContent = c.name;
+      const name = document.createElement('span'); name.className = 'pf-name'; name.textContent = c.native;
+      if (c.local !== c.native) { const local = document.createElement('span'); local.className = 'pf-local'; local.textContent = c.local; name.appendChild(local); }
       const dial = document.createElement('span'); dial.className = 'small'; dial.textContent = `+${c.dial}`;
       item.append(flag, name, dial);
       item.addEventListener('click', () => pick(c.code));
