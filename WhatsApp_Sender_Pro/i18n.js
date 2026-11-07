@@ -21,18 +21,30 @@ import th from './locales/th.js';
 import zh from './locales/zh.js';
 import ja from './locales/ja.js';
 import ko from './locales/ko.js';
+import he from './locales/he.js';
+import el from './locales/el.js';
+import cs from './locales/cs.js';
+import ro from './locales/ro.js';
+import hu from './locales/hu.js';
+import sv from './locales/sv.js';
+import ms from './locales/ms.js';
+import sw from './locales/sw.js';
 
-const STRINGS = { es, en, pt, fr, de, it, nl, pl, ru, uk, tr, ar, fa, hi, bn, ur, id, vi, th, zh, ja, ko };
+const STRINGS = { es, en, pt, fr, de, it, nl, pl, ru, uk, tr, ar, fa, hi, bn, ur, id, vi, th, zh, ja, ko, he, el, cs, ro, hu, sv, ms, sw };
 
 // Shown in Settings with each language's own name
 export const LANGUAGES = [
   ['es', 'Español'], ['en', 'English'], ['pt', 'Português'], ['fr', 'Français'], ['de', 'Deutsch'],
   ['it', 'Italiano'], ['nl', 'Nederlands'], ['pl', 'Polski'], ['ru', 'Русский'], ['uk', 'Українська'],
   ['tr', 'Türkçe'], ['ar', 'العربية'], ['fa', 'فارسی'], ['hi', 'हिन्दी'], ['bn', 'বাংলা'], ['ur', 'اردو'],
-  ['id', 'Bahasa Indonesia'], ['vi', 'Tiếng Việt'], ['th', 'ไทย'], ['zh', '中文（简体）'], ['ja', '日本語'], ['ko', '한국어']
+  ['id', 'Bahasa Indonesia'], ['vi', 'Tiếng Việt'], ['th', 'ไทย'], ['zh', '中文（简体）'], ['ja', '日本語'], ['ko', '한국어'],
+  ['he', 'עברית'], ['el', 'Ελληνικά'], ['cs', 'Čeština'], ['ro', 'Română'], ['hu', 'Magyar'], ['sv', 'Svenska'],
+  ['ms', 'Bahasa Melayu'], ['sw', 'Kiswahili']
 ].map(([code, name]) => ({ code, name }));
 
-const RTL = new Set(['ar', 'fa', 'ur']);
+const RTL = new Set(['ar', 'fa', 'ur', 'he']);
+// Older names some systems still report
+const ALIASES = { iw: 'he', in: 'id', fil: 'en', nb: 'en', no: 'en' };
 
 let current = 'es';
 
@@ -41,7 +53,8 @@ export const isRtl = () => RTL.has(current);
 
 export function setLang(lang){
   const wanted = String(lang === 'auto' || !lang ? chrome.i18n.getUILanguage() : lang).toLowerCase();
-  const base = wanted.split(/[-_]/)[0];
+  const first = wanted.split(/[-_]/)[0];
+  const base = ALIASES[first] && !STRINGS[first] ? ALIASES[first] : first;
   current = STRINGS[wanted] ? wanted : STRINGS[base] ? base : 'en';
   return current;
 }

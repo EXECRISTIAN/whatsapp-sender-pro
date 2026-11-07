@@ -1,4 +1,4 @@
-WhatsApp Sender Pro 1.10.1
+WhatsApp Sender Pro 1.10.2
 =========================
 
 Abre chats de WhatsApp desde Chrome sin agendar el número. El mensaje queda
@@ -41,8 +41,8 @@ Configuración (⚙)
   acepta también las listas de contactos exportadas por versiones anteriores.
   Desde el popup, Importar abre la ventana para elegir el archivo (Chrome
   cierra el popup al abrir el selector de archivos).
-- Idioma (22 idiomas, o Automático según Chrome), tema, color, imagen de
-  fondo y zoom. Árabe, persa y urdu se muestran de derecha a izquierda.
+- Idioma (30 idiomas, o Automático según Chrome), tema, color, imagen de
+  fondo y zoom. Árabe, hebreo, persa y urdu se muestran de derecha a izquierda.
 
 Actualizaciones automáticas
 - La extensión busca la última versión en
