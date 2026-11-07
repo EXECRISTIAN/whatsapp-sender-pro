@@ -178,6 +178,14 @@ body:has(> #rootSizer > .window-frame) #rootSizer { padding: 0; }
 .check-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
 .check-row label { display: inline-flex; align-items: center; gap: 6px; font-weight: 400; margin: 0; }
 .install-btn { width: 100%; margin: 6px 0; padding: 8px; }
+.switch-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 4px 0 8px; font-weight: 600; cursor: pointer; }
+.switch-row input { appearance: none; -webkit-appearance: none; width: 38px; height: 22px; border-radius: 11px; background: var(--muted); position: relative; cursor: pointer; flex: none; margin: 0; padding: 0; border: none; transition: background .15s; }
+.switch-row input::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .15s; }
+.switch-row input:checked { background: var(--accent); }
+.switch-row input:checked::after { transform: translateX(16px); }
+.switch-row input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+[dir="rtl"] .switch-row input:checked::after { transform: translateX(-16px); }
+[dir="rtl"] .switch-row input::after { left: auto; right: 3px; }
 .two-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 
 /* Updates */

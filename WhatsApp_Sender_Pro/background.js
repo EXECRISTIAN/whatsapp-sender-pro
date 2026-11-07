@@ -2,8 +2,10 @@
 import { buildUrl, extractPhone, loadPhoneDefaults, migrateStorage, normalizeSettings, openChat, parsePhone, registerChat } from './shared.js';
 import { setLang, t } from './i18n.js';
 import { setupUpdater } from './updater.js';
+import { setupDataBackup } from './databackup.js';
 
 setupUpdater();
+setupDataBackup();
 
 async function setupMenus(){
   const { wa_settings } = await chrome.storage.sync.get(['wa_settings']);

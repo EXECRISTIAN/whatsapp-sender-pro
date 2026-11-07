@@ -110,8 +110,6 @@
         <label for="langSelect" data-i18n="language"></label>
         <select id="langSelect">
           <option value="auto" data-i18n="langAuto"></option>
-          <option value="es">Español</option>
-          <option value="en">English</option>
         </select>
       </div>
 
@@ -126,10 +124,12 @@
         <button id="btnImport" type="button" class="btn-mini" data-i18n="import"></button>
       </div>
       <div id="dataHint" class="hint"></div>
+      <div id="autoBackupInfo" class="hint"></div>
       <input id="importInput" type="file" accept=".json,application/json" class="hidden" />
 
       <hr/>
-      <h4 data-i18n="updatesSection"></h4>
+      <h4 id="updatesTitle" data-i18n="updatesSection"></h4>
+      <label class="switch-row"><span data-i18n="autoUpdate"></span><input id="autoUpdate" type="checkbox" role="switch" /></label>
       <div id="updateInfo" class="update-info"></div>
       <button id="btnInstallUpdate" type="button" class="primary install-btn hidden"></button>
       <div id="installHint" class="hint hidden"></div>
@@ -139,6 +139,7 @@
         <li data-i18n="helperStep2"></li>
         <li data-i18n="helperStep3"></li>
       </ol>
+      <button id="btnOpenFolder" type="button" class="btn-mini hidden" data-i18n="openFolder"></button>
       <div class="hint"><span data-i18n="extensionId"></span> <code id="extensionId"></code></div>
       <div class="two-buttons">
         <button id="btnCheckUpdate" type="button" class="btn-mini" data-i18n="checkNow"></button>

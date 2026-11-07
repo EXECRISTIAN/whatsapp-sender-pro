@@ -8,7 +8,7 @@ $ProgressPreference = 'SilentlyContinue'
 
 $Repo = 'EXECRISTIAN/whatsapp-sender-pro'
 $AppName = 'WhatsApp Sender Pro'
-$HostVersion = '1'
+$HostVersion = '2'
 $Root = Join-Path $env:LOCALAPPDATA 'WhatsAppSenderPro'
 $LogFile = Join-Path $Root 'updater.log'
 
@@ -32,7 +32,7 @@ function Read-Message {
   $header = Read-Exactly $stdin 4
   if (-not $header) { return $null }
   $size = [BitConverter]::ToInt32($header, 0)
-  if ($size -le 0 -or $size -gt 1MB) { return $null }
+  if ($size -le 0 -or $size -gt 16MB) { return $null }
   $body = Read-Exactly $stdin $size
   if (-not $body) { return $null }
   return [Text.Encoding]::UTF8.GetString($body) | ConvertFrom-Json
@@ -106,6 +106,28 @@ function Update-Extension($msg) {
   }
 }
 
+# Copy of contacts and templates outside Chrome, so they come back if the extension is removed and loaded again
+$DataDir = Join-Path $Root 'data'
+$DataFile = Join-Path $DataDir 'backup.json'
+
+function Save-Data($msg) {
+  $json = [string]$msg.json
+  if (-not $json.StartsWith('{')) { throw 'Copia de datos no válida.' }
+  New-Item -ItemType Directory -Path $DataDir -Force | Out-Null
+  $tmp = "$DataFile.tmp"
+  [IO.File]::WriteAllText($tmp, $json, (New-Object Text.UTF8Encoding $false))
+  if (Test-Path -LiteralPath $DataFile) { Copy-Item -LiteralPath $DataFile -Destination (Join-Path $DataDir 'backup.prev.json') -Force }
+  Move-Item -LiteralPath $tmp -Destination $DataFile -Force
+  return @{ ok = $true }
+}
+
+function Read-Data {
+  if (-not (Test-Path -LiteralPath $DataFile)) { return @{ ok = $true; json = '' } }
+  # Chrome accepts at most 1 MB from a native host
+  if ((Get-Item -LiteralPath $DataFile).Length -gt 900KB) { return @{ ok = $false; error = 'La copia es demasiado grande para restaurarla sola: importala desde Configuración.' } }
+  return @{ ok = $true; json = [IO.File]::ReadAllText($DataFile, [Text.Encoding]::UTF8) }
+}
+
 try {
   New-Item -ItemType Directory -Path $Root -Force | Out-Null
   $msg = Read-Message
@@ -122,6 +144,8 @@ try {
       Write-Log "Listo: $($result.previous) -> $($result.version)"
       Send-Message $result
     }
+    'backup' { Send-Message (Save-Data $msg) }
+    'restore' { Send-Message (Read-Data) }
     default { Send-Message @{ ok = $false; error = 'Acción desconocida.' } }
   }
 } catch {

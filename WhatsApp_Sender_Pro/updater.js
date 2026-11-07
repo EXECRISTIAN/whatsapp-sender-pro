@@ -8,7 +8,7 @@ export const REPO = 'EXECRISTIAN/whatsapp-sender-pro';
 export const RELEASES_URL = `https://github.com/${REPO}/releases`;
 const API_LATEST = `https://api.github.com/repos/${REPO}/releases/latest`;
 const DOWNLOAD_PREFIX = `https://github.com/${REPO}/releases/download/`;
-const HOST = 'com.execristian.whatsapp_sender_pro';
+export const HOST = 'com.execristian.whatsapp_sender_pro';
 const OPEN_CHECK_GAP_MS = 60 * 1000; // opening the popup many times in a row checks at most once a minute
 export const DAILY_ALARM = 'wa_update_daily';
 export const RETRY_ALARM = 'wa_update_retry';
@@ -73,14 +73,18 @@ export async function checkForUpdate({ force = false } = {}){
     next.status = 'failed'; next.error = state.error; // don't retry a failed install until a new check is asked for
   }
   const saved = await setState(next);
-  if (saved.status === 'available') await applyUpdate();
+  if (saved.status === 'available' && autoOn(saved)) await applyUpdate();
   return saved;
 }
 
-// Installs the pending update now if nothing of the extension is open; otherwise retries every minute
+// Automatic updates are on unless the user turned them off in Settings
+export const autoOn = state => state.auto !== false;
+
+// Installs the pending update now if nothing of the extension is open; otherwise retries every minute.
+// With automatic updates off it only installs after the user pressed Install (installRequested).
 export async function applyUpdate(){
   const state = await getState();
-  if (state.status !== 'available' || !state.url) { await chrome.alarms.clear(RETRY_ALARM); return state; }
+  if (state.status !== 'available' || !state.url || !(autoOn(state) || state.installRequested)) { await chrome.alarms.clear(RETRY_ALARM); return state; }
   if (!state.helper && !(await pingHelper())) { await chrome.alarms.clear(RETRY_ALARM); return setState({ helper: false }); }
   if (await extensionInUse()) {
     await chrome.alarms.create(RETRY_ALARM, { delayInMinutes: 1, periodInMinutes: 1 });
@@ -93,11 +97,11 @@ export async function applyUpdate(){
     res = await chrome.runtime.sendNativeMessage(HOST, { action: 'update', url: state.url, version: state.latest, current: chrome.runtime.getManifest().version });
   } catch (e) { res = { ok: false, error: e.message }; }
   if (res && res.ok) {
-    await setState({ status: 'updated', updatedFrom: chrome.runtime.getManifest().version, updatedTo: res.version, updatedAt: Date.now(), notice: true });
+    await setState({ status: 'updated', installRequested: false, updatedFrom: chrome.runtime.getManifest().version, updatedTo: res.version, updatedAt: Date.now(), notice: true });
     chrome.runtime.reload();
     return getState();
   }
-  return setState({ status: 'failed', error: (res && res.error) || 'unknown' });
+  return setState({ status: 'failed', installRequested: false, error: (res && res.error) || 'unknown' });
 }
 
 export function setupUpdater(){
@@ -118,6 +122,14 @@ export function setupUpdater(){
   chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
     if (msg && msg.type === 'wa_checkUpdate') { checkForUpdate({ force: !!msg.force }).then(reply, () => reply(null)); return true; }
     if (msg && msg.type === 'wa_updateState') { getState().then(reply); return true; }
+    if (msg && msg.type === 'wa_setAuto') {
+      setState({ auto: !!msg.auto, installRequested: false }).then(async s => { if (s.auto && s.status === 'available') await applyUpdate(); reply(await getState()); });
+      return true;
+    }
+    // Install button: install as soon as the extension closes, even with automatic updates off
+    if (msg && msg.type === 'wa_requestInstall') { setState({ installRequested: true }).then(() => reply(true)); return true; }
+    // Settings polls this while waiting for the one-time helper setup, so it turns green by itself
+    if (msg && msg.type === 'wa_pingHelper') { pingHelper().then(helper => setState({ helper })).then(reply); return true; }
     if (msg && msg.type === 'wa_dismissNotice') { setState({ notice: false }).then(() => reply(true)); return true; }
     return false;
   });

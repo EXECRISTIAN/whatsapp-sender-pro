@@ -1,4 +1,5 @@
 ﻿# Registers the WhatsApp Sender Pro updater for the extension in the parent folder (current user, no admin).
+# It also keeps a copy of contacts and templates in %LOCALAPPDATA%\WhatsAppSenderPro\data.
 param([string]$Id = '')
 $ErrorActionPreference = 'Stop'
 
@@ -18,6 +19,11 @@ function Get-ExtensionId([string]$path) {
 $paths = @($ext, ($ext.Substring(0,1).ToLower() + $ext.Substring(1)), ($ext.Substring(0,1).ToUpper() + $ext.Substring(1)))
 try { $paths += (New-Object -ComObject Scripting.FileSystemObject).GetFolder($ext).ShortPath } catch {}
 $ids = @($paths | Select-Object -Unique | ForEach-Object { Get-ExtensionId $_ })
+# With "key" in manifest.json the ID is the same in any folder: SHA-256 of the public key
+if ($manifest.key) {
+  $hash = [Security.Cryptography.SHA256]::Create().ComputeHash([Convert]::FromBase64String([string]$manifest.key))
+  $ids = @(-join ($hash[0..15] | ForEach-Object { [char](97 + ($_ -shr 4)); [char](97 + ($_ -band 15)) })) + $ids
+}
 if ($Id -match '^[a-p]{32}$') { $ids = @($Id) + $ids }
 $ids = @($ids | Select-Object -Unique)
 

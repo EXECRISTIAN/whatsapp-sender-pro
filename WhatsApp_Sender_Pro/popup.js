@@ -1,5 +1,5 @@
 import { COUNTRIES, RATE_LIMIT, applyAppearance, buildBackup, buildUrl, callingCode, filterContacts, filterTemplates, flagEmoji, formatPhone, loadAppearance, loadPhoneDefaults, mergeContacts, mergeTemplates, normalizeSettings, onlyDigits, openChat, parseBackup, recentOpens, registerChat, setupEmojiPanel, showToast } from './shared.js';
-import { getLang, setLang, t, translatePage } from './i18n.js';
+import { LANGUAGES, getLang, setLang, t, translatePage } from './i18n.js';
 import { createPhoneField } from './phone-field.js';
 import { RELEASES_URL, compareVersions } from './updater.js';
 
@@ -43,6 +43,7 @@ const grips = [qs('#resizeGrip'), qs('#resizeGripLeft')];
 // Settings dialog
 const dlgSettings = qs('#dlgSettings');
 const langSelect = qs('#langSelect');
+for (const { code, name } of LANGUAGES) langSelect.add(new Option(name, code));
 const defaultArea = qs('#defaultArea');
 const defaultCountry = qs('#defaultCountry');
 const themeMode = qs('#themeMode');
@@ -440,8 +441,8 @@ async function openSettings(focusData = false, scrollTo = ''){
   qs('#extensionId').textContent = chrome.runtime.id;
   qs('#versionBadge').textContent = `v${chrome.runtime.getManifest().version}`;
   qs('#versionBadge').title = t('versionTitle');
-  renderUpdate();
   dlgSettings.showModal();
+  renderUpdate(); // starts watching for the updater setup while Settings is open
   if (scrollTo) qs(scrollTo).scrollIntoView({ block: 'start' });
   if (focusData) { qs('#btnImport').scrollIntoView({ block: 'center' }); qs('#btnImport').focus(); showToast(t('importWindow')); }
 }
@@ -538,29 +539,41 @@ importInput.addEventListener('change', async (e)=>{
 // pending update waits until the extension is closed
 chrome.runtime.connect({ name: 'wa_ui' });
 let updateState = {};
+const dataNotice = { restored: null, fresh: false };
 const updateBanner = qs('#updateBanner');
 const updateAction = qs('#updateAction');
 const installBtn = qs('#btnInstallUpdate');
 function renderUpdate(){
   const s = updateState || {};
   let text = '', action = '', isError = false, dismiss = false;
+  const auto = s.auto !== false;
   if (s.notice && s.updatedTo === chrome.runtime.getManifest().version) { text = t('bannerUpdated', { version: s.updatedTo }); dismiss = true; }
-  else if (s.status === 'available' && s.helper) { text = t('bannerAvailable', s); action = 'install'; }
-  else if (s.status === 'available') { text = t('bannerManual', s); action = 'howto'; }
+  // With automatic updates working nothing is shown: the update installs by itself when the extension closes
+  else if (s.status === 'available' && !(auto && s.helper)) { text = t('bannerManual', s); action = 'goto'; }
   else if (s.status === 'failed') { text = t('bannerFailed', { latest: s.latest, error: s.error }); action = 'retry'; isError = true; }
   else if (s.status === 'noAsset') { text = t('bannerNoAsset', s); isError = true; }
+  // Data: restored from the automatic copy, or a fresh install with nothing saved yet
+  let kind = text ? 'update' : '';
+  if (!text && dataNotice.restored) { text = t('dataRestored', dataNotice.restored); dismiss = true; kind = 'restored'; }
+  else if (!text && dataNotice.fresh && !contacts.length && !templates.length) { text = t('dataFreshInstall'); action = 'import'; dismiss = true; kind = 'fresh'; }
+  updateBanner.dataset.kind = kind;
   qs('#updateText').textContent = text;
   updateBanner.classList.toggle('hidden', !text);
   updateBanner.classList.toggle('error', isError);
   updateAction.dataset.action = action;
-  updateAction.textContent = action ? t({ install: 'bannerInstallNow', howto: 'bannerHowTo', retry: 'bannerRetry' }[action]) : '';
+  updateAction.textContent = action ? t({ goto: 'bannerGoToUpdates', retry: 'bannerRetry', import: 'dataImportBackup' }[action]) : '';
   updateAction.classList.toggle('hidden', !action);
   qs('#updateDismiss').classList.toggle('hidden', !dismiss);
   // Settings section
   const when = s.checkedAt ? new Date(s.checkedAt).toLocaleString(getLang(), { dateStyle: 'short', timeStyle: 'short' }) : t('updateNever');
   qs('#updateInfo').textContent = [t('updateInfo', { current: chrome.runtime.getManifest().version, latest: s.latest || '—', when }), s.error === 'network' ? t('updateNetwork') : ''].filter(Boolean).join(' ');
-  qs('#helperInfo').textContent = t(s.helper ? 'helperOn' : 'helperOff');
-  qs('#helperSteps').classList.toggle('hidden', !!s.helper);
+  autoSwitch.checked = auto;
+  qs('#autoBackupInfo').textContent = t(s.helper ? 'autoBackupOn' : 'autoBackupOff');
+  const needsHelper = auto && !s.helper;
+  qs('#helperInfo').textContent = t(!auto ? 'autoOff' : s.helper ? 'helperOn' : 'helperOff');
+  qs('#helperSteps').classList.toggle('hidden', !needsHelper);
+  qs('#btnOpenFolder').classList.toggle('hidden', !needsHelper);
+  watchHelper(needsHelper && dlgSettings.open);
   const canInstall = (s.status === 'available' || s.status === 'failed') && !!s.url && compareVersions(s.latest, chrome.runtime.getManifest().version) > 0;
   installBtn.classList.toggle('hidden', !canInstall);
   installBtn.textContent = canInstall ? t(s.helper ? 'installNow' : 'installDownload', { latest: s.latest }) : '';
@@ -570,7 +583,10 @@ function renderUpdate(){
 installBtn.addEventListener('click', () => {
   const s = updateState || {};
   if (!s.url) return;
-  if (s.helper) { window.top.close(); return; } // the updater installs as soon as no page of the extension is open
+  if (s.helper) { // the updater installs as soon as no page of the extension is open
+    chrome.runtime.sendMessage({ type: 'wa_requestInstall' }).finally(() => window.top.close());
+    return;
+  }
   // Without the updater Chrome cannot replace the extension's files: download the ZIP and explain the last step
   chrome.tabs.create({ url: s.url, active: false });
   const hint = qs('#installHint');
@@ -584,15 +600,35 @@ async function refreshUpdate(force = false){
 }
 updateAction.addEventListener('click', async () => {
   const action = updateAction.dataset.action;
-  if (action === 'install') window.top.close(); // the update starts as soon as no page of the extension is open
-  else if (action === 'howto') openSettings(false, '#updateInfo');
+  if (action === 'goto') openSettings(false, '#updatesTitle');
+  else if (action === 'import') openSettings(true);
   else if (action === 'retry') refreshUpdate(true);
 });
 qs('#updateDismiss').addEventListener('click', async () => {
-  updateState.notice = false;
-  await chrome.runtime.sendMessage({ type: 'wa_dismissNotice' });
+  const kind = updateBanner.dataset.kind;
+  if (kind === 'restored') { dataNotice.restored = null; await chrome.storage.local.remove('wa_restored'); }
+  else if (kind === 'fresh') { dataNotice.fresh = false; await chrome.storage.local.remove('wa_freshInstall'); }
+  else { updateState.notice = false; await chrome.runtime.sendMessage({ type: 'wa_dismissNotice' }); }
   renderUpdate();
 });
+const autoSwitch = qs('#autoUpdate');
+autoSwitch.addEventListener('change', async () => {
+  updateState = { ...updateState, auto: autoSwitch.checked };
+  renderUpdate();
+  try { updateState = await chrome.runtime.sendMessage({ type: 'wa_setAuto', auto: autoSwitch.checked }) || updateState; } catch {}
+  renderUpdate();
+});
+// While the one-time setup is pending, check every few seconds so the switch turns active by itself
+let helperTimer = 0;
+function watchHelper(on){
+  if (on && !helperTimer) helperTimer = setInterval(async () => {
+    if (!dlgSettings.open) { watchHelper(false); return; }
+    try { await chrome.runtime.sendMessage({ type: 'wa_pingHelper' }); } catch {}
+  }, 3000);
+  if (!on && helperTimer) { clearInterval(helperTimer); helperTimer = 0; }
+}
+// chrome://extensions shows "Loaded from: <folder>"; clicking it opens the folder that has instalar-actualizador.cmd
+qs('#btnOpenFolder').addEventListener('click', () => chrome.tabs.create({ url: `chrome://extensions/?id=${chrome.runtime.id}` }));
 qs('#btnCheckUpdate').addEventListener('click', () => refreshUpdate(true));
 qs('#btnReleases').addEventListener('click', () => chrome.tabs.create({ url: RELEASES_URL }));
 chrome.storage.onChanged.addListener((changes, area) => {
@@ -622,7 +658,8 @@ document.addEventListener('keydown', (e)=>{
 // Init
 (async function init(){
   const { wa_platform='app' } = await getSync(['wa_platform']);
-  const { wa_templates=[], wa_history=[], wa_contacts=[] } = await getLocal(['wa_templates','wa_history','wa_contacts']);
+  const { wa_templates=[], wa_history=[], wa_contacts=[], wa_restored=null, wa_freshInstall=false } = await getLocal(['wa_templates','wa_history','wa_contacts','wa_restored','wa_freshInstall']);
+  Object.assign(dataNotice, { restored: wa_restored, fresh: wa_freshInstall });
   const appearance = await loadAppearance();
   const phoneDefaults = await loadPhoneDefaults();
   platform = wa_platform; templates = wa_templates; historyItems = wa_history; contacts = wa_contacts;

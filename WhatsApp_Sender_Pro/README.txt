@@ -1,4 +1,4 @@
-WhatsApp Sender Pro 1.9.3
+WhatsApp Sender Pro 1.10.0
 =========================
 
 Abre chats de WhatsApp desde Chrome sin agendar el número. El mensaje queda
@@ -41,15 +41,23 @@ Configuración (⚙)
   acepta también las listas de contactos exportadas por versiones anteriores.
   Desde el popup, Importar abre la ventana para elegir el archivo (Chrome
   cierra el popup al abrir el selector de archivos).
-- Idioma, tema, color, imagen de fondo y zoom.
+- Idioma (22 idiomas, o Automático según Chrome), tema, color, imagen de
+  fondo y zoom. Árabe, persa y urdu se muestran de derecha a izquierda.
 
 Actualizaciones automáticas
 - La extensión busca la última versión en
   https://github.com/EXECRISTIAN/whatsapp-sender-pro/releases
   una vez por día y cada vez que la abrís.
-- Para que se instalen solas, ejecutá UNA VEZ "instalar-actualizador.cmd"
-  (doble clic) desde esta carpeta. Si Windows avisa, "Más información" >
-  "Ejecutar de todas formas". No pide permisos de administrador.
+- Interruptor "Actualizaciones automáticas" en Configuración > Actualizaciones.
+  Apagado: te avisa cuando hay versión nueva y la instalás con "Instalar".
+- Para que se instalen solas hace falta un paso, UNA SOLA VEZ: en
+  Configuración > Actualizaciones tocá "Abrir carpeta de la extensión", hacé
+  clic en la ruta de "Cargada desde" y doble clic en
+  "instalar-actualizador.cmd". Si Windows avisa, "Más información" >
+  "Ejecutar de todas formas". No pide permisos de administrador. La sección
+  cambia sola a "✓ Activas".
+- Con las automáticas activas no aparece ningún cartel: la actualización se
+  instala sola. Si no están activas, el cartel dice "Ir a actualizaciones".
 - La actualización se instala sobre esta misma carpeta y solo cuando la
   extensión no está abierta (popup, ventana ni página de redactar). Después
   Chrome la recarga sola y conserva tus datos.
@@ -64,8 +72,8 @@ Instalación
 3. Activá "Modo de desarrollador" (arriba a la derecha).
 4. Clic en "Cargar descomprimida" y elegí la carpeta que contiene manifest.json.
 5. Fijá la extensión con el ícono del rompecabezas de la barra de Chrome.
-Para actualizar: reemplazá los archivos en la misma carpeta y tocá ↻ en
-chrome://extensions. Así se conservan contactos y plantillas.
+Para actualizar a mano: reemplazá los archivos (en esta carpeta o en otra) y
+tocá ↻ en chrome://extensions. No hace falta "Quitar" la extensión.
 
 Atajos
 - Enter en Teléfono vacío: pegar el número sugerido. Con número: abrir chat.
@@ -81,7 +89,16 @@ Limitaciones de WhatsApp
   puede restringir las cuentas con actividad masiva.
 
 Datos
-Los contactos, plantillas e historial se guardan solo en este navegador
-(no se sincronizan). Exportá una copia de seguridad de vez en cuando.
+- Los contactos, plantillas e historial se guardan en este navegador y se
+  conservan en cada actualización. Desde la 1.10.0 la extensión tiene un ID
+  fijo (gemleaglcoamjgkmckdhnbanhccogpjb), así que también se conservan si
+  cargás la versión nueva desde otra carpeta.
+- Ojo: "Quitar" la extensión en chrome://extensions borra sus datos. Con el
+  actualizador instalado hay además una copia automática en
+  %LOCALAPPDATA%\WhatsAppSenderPro\data y, si la quitás y la volvés a
+  cargar, los contactos y plantillas vuelven solos.
+- Sin el actualizador, exportá una copia de seguridad de vez en cuando. Si la
+  extensión arranca vacía, el cartel "¿Tenías contactos o plantillas
+  guardados?" te lleva a Importar.
 
 Licencias de terceros: vendor/LICENSES.txt
