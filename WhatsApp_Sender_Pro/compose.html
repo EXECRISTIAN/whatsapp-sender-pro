@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>WhatsApp Sender Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="root">
+  <div id="rootSizer" style="max-width: 520px;">
+    <h3 data-i18n="composeTitle"></h3>
+    <div class="row">
+      <div class="label-row">
+        <label for="phone" data-i18n="phone"></label>
+        <span class="info"><button type="button" class="info-btn" data-i18n-label="moreInfo">ⓘ</button><span class="info-tip" role="tooltip" data-i18n="phoneHint"></span></span>
+      </div>
+      <div id="phoneField" data-input-id="phone"></div>
+      <div class="phone-status"><span id="phoneFeedback" class="small"></span></div>
+      <div id="contactInfo" class="small note hidden"></div>
+    </div>
+    <div class="row">
+      <div class="label-row">
+        <label for="message" data-i18n="message"></label>
+        <span class="info"><button type="button" class="info-btn" data-i18n-label="moreInfo">ⓘ</button><span class="info-tip" role="tooltip" data-i18n="attachmentsHint"></span></span>
+      </div>
+      <div class="msg-box">
+        <textarea id="message" data-i18n-placeholder="messagePlaceholder" rows="6"></textarea>
+        <div class="msg-bar">
+          <span class="counter"><span id="charCount">0</span> / 4096</span>
+          <div class="msg-tools">
+            <button id="emojiBtn" type="button" class="icon-btn ghost" data-i18n-title="emojis" data-i18n-label="emojis">😊</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="primary" id="sendBtn" type="button" data-i18n="openChat"></button>
+      <button id="copyLink" type="button" class="icon-btn" data-i18n-title="copyLink" data-i18n-label="copyLink">🔗</button>
+    </div>
+  </div>
+  </div>
+  <div id="emojiPanel" class="emoji-panel hidden">
+    <div class="emoji-grid" id="emojiGrid"></div>
+  </div>
+  <div id="toast" class="hidden" role="status"></div>
+  <script type="module" src="compose.js"></script>
+</body>
+</html>

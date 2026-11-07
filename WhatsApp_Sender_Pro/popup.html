@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>WhatsApp Sender Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="root">
+  <div id="rootSizer">
+    <header class="topbar">
+      <div class="brand">
+        <img src="icons/icon32.png" alt="" width="22" height="22" />
+        <strong>WhatsApp Sender Pro</strong>
+      </div>
+      <div class="topbar-tools">
+        <div class="segmented compact" id="platformToggle" role="group" data-i18n-title="platformHint">
+          <button type="button" data-platform="app">App</button>
+          <button type="button" data-platform="web">Web</button>
+        </div>
+        <button id="btnOpenWindow" type="button" class="icon-btn" data-i18n-title="windowTitle" data-i18n-label="windowTitle">⧉</button>
+        <button id="btnSettings" type="button" class="icon-btn" data-i18n-title="settingsTitle" data-i18n-label="settingsTitle">⚙</button>
+      </div>
+    </header>
+
+    <div id="updateBanner" class="update-banner hidden" role="status">
+      <span id="updateText"></span>
+      <button id="updateAction" type="button" class="link-btn hidden"></button>
+      <button id="updateDismiss" type="button" class="icon-btn ghost hidden" data-i18n-title="exit" data-i18n-label="exit">✕</button>
+    </div>
+
+    <form id="form" autocomplete="off">
+      <div class="row">
+        <div class="label-row">
+          <label for="phone" data-i18n="phone"></label>
+          <span class="info"><button type="button" class="info-btn" data-i18n-label="moreInfo">ⓘ</button><span class="info-tip" role="tooltip" data-i18n="phoneHint"></span></span>
+        </div>
+        <div id="phoneField" data-input-id="phone" data-required></div>
+        <button id="pasteSuggestion" type="button" class="paste-suggest hidden"></button>
+        <div class="phone-status">
+          <span id="phoneFeedback" class="small"></span>
+          <button id="quickSave" type="button" class="link-btn hidden" data-i18n="saveContact"></button>
+        </div>
+        <div id="contactInfo" class="small note hidden"></div>
+      </div>
+
+      <div class="row">
+        <div class="label-row">
+          <label for="message" data-i18n="message"></label>
+          <span class="info"><button type="button" class="info-btn" data-i18n-label="moreInfo">ⓘ</button><span class="info-tip" role="tooltip" data-i18n="attachmentsHint"></span></span>
+        </div>
+        <div class="msg-box">
+          <textarea id="message" data-i18n-placeholder="messagePlaceholder"></textarea>
+          <div class="msg-bar">
+            <span class="counter"><span id="charCount">0</span> / 4096</span>
+            <div class="msg-tools">
+              <button id="saveAsTemplate" type="button" class="icon-btn ghost" data-i18n-title="saveAsTemplate" data-i18n-label="saveAsTemplate">☆</button>
+              <button id="emojiBtn" type="button" class="icon-btn ghost" data-i18n-title="emojis" data-i18n-label="emojis">😊</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="sendBtn" type="submit" data-i18n="openChat"></button>
+        <button id="copyLink" type="button" class="icon-btn" data-i18n-title="copyLink" data-i18n-label="copyLink">🔗</button>
+      </div>
+    </form>
+
+    <section class="library" aria-label="">
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" data-tab="contacts"><span data-i18n="contacts"></span> <span class="count" id="countContacts"></span></button>
+        <button type="button" role="tab" data-tab="templates"><span data-i18n="templates"></span> <span class="count" id="countTemplates"></span></button>
+        <button type="button" role="tab" data-tab="recents"><span data-i18n="recents"></span></button>
+      </div>
+      <div class="lib-tools">
+        <input id="libSearch" type="search" autocomplete="off" />
+        <button id="btnLibNew" type="button" class="icon-btn primary">＋</button>
+      </div>
+      <div id="libList" class="lib-list" role="tabpanel"></div>
+    </section>
+  </div>
+  </div>
+
+  <div id="resizeGrip" class="resize-grip" data-i18n-title="resizeHint"></div>
+
+  <div id="emojiPanel" class="emoji-panel hidden">
+    <div class="emoji-grid" id="emojiGrid"></div>
+  </div>
+
+  <dialog id="dlgSettings">
+    <form method="dialog">
+      <div class="dialog-head">
+        <h3 data-i18n="settingsTitle"></h3>
+        <button id="btnCloseSettings" type="button" class="btn-mini" data-i18n-title="exit"><span aria-hidden="true">✕</span> <span data-i18n="exit"></span></button>
+      </div>
+      <div class="row">
+        <label for="defaultCountry" data-i18n="countryLabel"></label>
+        <select id="defaultCountry"></select>
+        <div class="hint" data-i18n="countryHint"></div>
+      </div>
+      <div class="row">
+        <label for="defaultArea" data-i18n="areaLabel"></label>
+        <input id="defaultArea" inputmode="numeric" maxlength="5" />
+        <div class="hint" data-i18n="areaHint"></div>
+      </div>
+      <div class="row">
+        <label for="langSelect" data-i18n="language"></label>
+        <select id="langSelect">
+          <option value="auto" data-i18n="langAuto"></option>
+          <option value="es">Español</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+
+      <hr/>
+      <h4 data-i18n="dataSection"></h4>
+      <div class="check-row">
+        <label><input id="dataContacts" type="checkbox" checked /> <span data-i18n="contacts"></span> <span class="small" id="dataContactsCount"></span></label>
+        <label><input id="dataTemplates" type="checkbox" checked /> <span data-i18n="templates"></span> <span class="small" id="dataTemplatesCount"></span></label>
+      </div>
+      <div class="two-buttons">
+        <button id="btnExport" type="button" class="btn-mini" data-i18n="export"></button>
+        <button id="btnImport" type="button" class="btn-mini" data-i18n="import"></button>
+      </div>
+      <div id="dataHint" class="hint"></div>
+      <input id="importInput" type="file" accept=".json,application/json" class="hidden" />
+
+      <hr/>
+      <h4 data-i18n="updatesSection"></h4>
+      <div id="updateInfo" class="update-info"></div>
+      <div id="helperInfo" class="hint"></div>
+      <ol id="helperSteps" class="helper-steps hidden">
+        <li data-i18n="helperStep1"></li>
+        <li data-i18n="helperStep2"></li>
+        <li data-i18n="helperStep3"></li>
+      </ol>
+      <div class="hint"><span data-i18n="extensionId"></span> <code id="extensionId"></code></div>
+      <div class="two-buttons">
+        <button id="btnCheckUpdate" type="button" class="btn-mini" data-i18n="checkNow"></button>
+        <button id="btnReleases" type="button" class="btn-mini" data-i18n="seeReleases"></button>
+      </div>
+
+      <hr/>
+      <h4 data-i18n="uiSection"></h4>
+      <div class="row">
+        <label for="themeMode" data-i18n="theme"></label>
+        <select id="themeMode">
+          <option value="auto" data-i18n="themeAuto"></option>
+          <option value="light" data-i18n="themeLight"></option>
+          <option value="dark" data-i18n="themeDark"></option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="accentColor" data-i18n="accent"></label>
+        <input id="accentColor" type="color" />
+      </div>
+      <div class="row">
+        <label for="bgImage" data-i18n="background"></label>
+        <input id="bgImage" type="file" accept="image/*" />
+        <div id="bgHint" class="hint"></div>
+      </div>
+      <div class="row">
+        <label for="outlineColor" data-i18n="outline"></label>
+        <input id="outlineColor" type="color" />
+      </div>
+      <div class="row">
+        <label for="uiScale" data-i18n="uiScale"></label>
+        <input id="uiScale" type="range" min="50" max="200" step="10" />
+      </div>
+      <div class="row">
+        <div class="hint" data-i18n="resizeHint"></div>
+      </div>
+      <div class="button-row">
+        <button id="btnResetSize" type="button" class="btn-mini" data-i18n="resetSize"></button>
+        <button id="btnClearBg" type="button" class="btn-mini" data-i18n="clearBg"></button>
+        <button value="cancel" class="btn-mini" data-i18n="cancel"></button>
+        <button id="btnSaveSettings" type="button" class="btn-mini primary" data-i18n="save"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgContact">
+    <form id="contactForm" autocomplete="off">
+      <div class="dialog-head">
+        <h3 id="contactDialogTitle"></h3>
+        <button id="btnCloseContact" type="button" class="btn-mini" data-i18n-title="exit"><span aria-hidden="true">✕</span> <span data-i18n="exit"></span></button>
+      </div>
+      <div class="row">
+        <label for="contactPhone" data-i18n="phone"></label>
+        <div id="contactPhoneField" data-input-id="contactPhone" data-required></div>
+        <div id="contactError" class="error"></div>
+      </div>
+      <div class="row">
+        <label for="contactName" data-i18n="name"></label>
+        <input id="contactName" />
+      </div>
+      <div class="row">
+        <label for="contactNotes" data-i18n="notes"></label>
+        <textarea id="contactNotes"></textarea>
+      </div>
+      <div class="row">
+        <label for="contactTags" data-i18n="tags"></label>
+        <input id="contactTags" />
+      </div>
+      <div class="button-row">
+        <button id="btnCancelContact" type="button" class="btn-mini" data-i18n="cancel"></button>
+        <button type="submit" class="btn-mini primary" data-i18n="save"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgTemplate">
+    <form id="templateForm" autocomplete="off">
+      <div class="dialog-head">
+        <h3 id="templateDialogTitle"></h3>
+        <button id="btnCloseTemplate" type="button" class="btn-mini" data-i18n-title="exit"><span aria-hidden="true">✕</span> <span data-i18n="exit"></span></button>
+      </div>
+      <div class="row">
+        <label for="templateTitle" data-i18n="templateName"></label>
+        <input id="templateTitle" required />
+      </div>
+      <div class="row">
+        <label for="templateText" data-i18n="templateText"></label>
+        <textarea id="templateText" required rows="6"></textarea>
+      </div>
+      <div class="button-row">
+        <button id="btnCancelTemplate" type="button" class="btn-mini" data-i18n="cancel"></button>
+        <button type="submit" class="btn-mini primary" data-i18n="save"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="hidden" role="status"></div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

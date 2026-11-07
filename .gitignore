@@ -1,0 +1,4 @@
+*.zip
+WhatsApp_Sender_Pro_v*/
+WhatsApp_Sender_Pro/updater/config.json
+node_modules/
