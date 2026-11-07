@@ -1,0 +1,49 @@
+name: Release
+
+# Publishing a version: bump "version" in WhatsApp_Sender_Pro/manifest.json, commit, then
+#   git tag v1.9.1 && git push origin main v1.9.1
+# This job tests, builds the ZIP (manifest.json at its root) and creates the GitHub release that
+# installed extensions pick up within a day, or the next time they are opened.
+# "Run workflow" (manual) only tests and builds the ZIP as a downloadable artifact: nothing is published.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Unit tests
+        run: node --test tests/shared.test.mjs
+      - name: Read version
+        id: version
+        run: echo "tag=v$(node -p "require('./WhatsApp_Sender_Pro/manifest.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Tag matches manifest version
+        if: github.ref_type == 'tag'
+        run: |
+          if [ "${{ steps.version.outputs.tag }}" != "$GITHUB_REF_NAME" ]; then
+            echo "manifest.json says ${{ steps.version.outputs.tag }} but the tag is $GITHUB_REF_NAME"; exit 1
+          fi
+      - name: Build ZIP
+        run: cd WhatsApp_Sender_Pro && zip -r -X "../WhatsApp_Sender_Pro_${{ steps.version.outputs.tag }}.zip" . -x 'updater/config.json'
+      - name: Check ZIP
+        run: unzip -l "WhatsApp_Sender_Pro_${{ steps.version.outputs.tag }}.zip" | grep -E ' manifest.json$| updater/host.ps1$'
+      - name: Keep ZIP (manual run)
+        if: github.ref_type != 'tag'
+        uses: actions/upload-artifact@v4
+        with:
+          name: WhatsApp_Sender_Pro_${{ steps.version.outputs.tag }}
+          path: WhatsApp_Sender_Pro_${{ steps.version.outputs.tag }}.zip
+      - name: Publish release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" "WhatsApp_Sender_Pro_${GITHUB_REF_NAME}.zip" --title "WhatsApp Sender Pro ${GITHUB_REF_NAME}" --generate-notes
