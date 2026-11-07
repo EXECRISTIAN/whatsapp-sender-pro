@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "WhatsApp Sender Pro",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "description": "Abre chats de WhatsApp sin agendar el número, con agenda de contactos, notas y plantillas de texto.",
   "minimum_chrome_version": "116",
   "permissions": ["storage", "contextMenus", "clipboardRead", "clipboardWrite", "alarms", "nativeMessaging"],

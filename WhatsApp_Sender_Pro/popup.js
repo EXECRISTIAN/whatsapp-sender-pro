@@ -1,7 +1,7 @@
 import { COUNTRIES, RATE_LIMIT, applyAppearance, buildBackup, buildUrl, callingCode, filterContacts, filterTemplates, flagEmoji, formatPhone, loadAppearance, loadPhoneDefaults, mergeContacts, mergeTemplates, normalizeSettings, onlyDigits, openChat, parseBackup, recentOpens, registerChat, setupEmojiPanel, showToast } from './shared.js';
 import { getLang, setLang, t, translatePage } from './i18n.js';
 import { createPhoneField } from './phone-field.js';
-import { RELEASES_URL } from './updater.js';
+import { RELEASES_URL, compareVersions } from './updater.js';
 
 // Helpers & storage
 const qs = sel => document.querySelector(sel);
@@ -542,6 +542,7 @@ chrome.runtime.connect({ name: 'wa_ui' });
 let updateState = {};
 const updateBanner = qs('#updateBanner');
 const updateAction = qs('#updateAction');
+const installBtn = qs('#btnInstallUpdate');
 function renderUpdate(){
   const s = updateState || {};
   let text = '', action = '', isError = false, dismiss = false;
@@ -562,7 +563,22 @@ function renderUpdate(){
   qs('#updateInfo').textContent = [t('updateInfo', { current: chrome.runtime.getManifest().version, latest: s.latest || '—', when }), s.error === 'network' ? t('updateNetwork') : ''].filter(Boolean).join(' ');
   qs('#helperInfo').textContent = t(s.helper ? 'helperOn' : 'helperOff');
   qs('#helperSteps').classList.toggle('hidden', !!s.helper);
+  const canInstall = (s.status === 'available' || s.status === 'failed') && !!s.url && compareVersions(s.latest, chrome.runtime.getManifest().version) > 0;
+  installBtn.classList.toggle('hidden', !canInstall);
+  installBtn.textContent = canInstall ? t(s.helper ? 'installNow' : 'installDownload', { latest: s.latest }) : '';
+  installBtn.title = canInstall ? t(s.helper ? 'installNowHint' : 'installDownloadHint') : '';
+  if (!canInstall) qs('#installHint').classList.add('hidden');
 }
+installBtn.addEventListener('click', () => {
+  const s = updateState || {};
+  if (!s.url) return;
+  if (s.helper) { window.top.close(); return; } // the updater installs as soon as no page of the extension is open
+  // Without the updater Chrome cannot replace the extension's files: download the ZIP and explain the last step
+  chrome.tabs.create({ url: s.url, active: false });
+  const hint = qs('#installHint');
+  hint.textContent = t('installManualSteps', { latest: s.latest });
+  hint.classList.remove('hidden');
+});
 async function refreshUpdate(force = false){
   if (force) qs('#updateInfo').textContent = t('updateChecking');
   try { updateState = await chrome.runtime.sendMessage({ type: 'wa_checkUpdate', force }) || updateState; } catch {}

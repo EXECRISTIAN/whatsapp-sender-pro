@@ -177,6 +177,7 @@ body:has(> #rootSizer > .window-frame) #rootSizer { padding: 0; }
 /* Settings data section */
 .check-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
 .check-row label { display: inline-flex; align-items: center; gap: 6px; font-weight: 400; margin: 0; }
+.install-btn { width: 100%; margin: 6px 0; padding: 8px; }
 .two-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 
 /* Updates */
