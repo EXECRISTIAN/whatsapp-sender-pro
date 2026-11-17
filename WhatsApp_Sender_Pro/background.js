@@ -11,8 +11,9 @@ async function setupMenus(){
   const { wa_settings } = await chrome.storage.sync.get(['wa_settings']);
   setLang(normalizeSettings(wa_settings).lang);
   await chrome.contextMenus.removeAll();
-  chrome.contextMenus.create({ id: 'wa_compose', title: t('menuCompose'), contexts: ['selection'] });
+  // Direct message first: it is the quickest path
   chrome.contextMenus.create({ id: 'wa_direct', title: t('menuDirect'), contexts: ['selection'] });
+  chrome.contextMenus.create({ id: 'wa_compose', title: t('menuCompose'), contexts: ['selection'] });
 }
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
