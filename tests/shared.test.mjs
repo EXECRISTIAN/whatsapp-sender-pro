@@ -1,7 +1,7 @@
 // Run with: node --test tests/shared.test.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildBackup, buildUrl, callingCode, detectCountry, filterTemplates, mergeTemplates, parseBackup, extractPhone, filterContacts, flagEmoji, formatPhone, guessCountry, isValidPhone, mergeContacts, normalizeSettings, parsePhone, splitLegacyPrefix } from '../WhatsApp_Sender_Pro/shared.js';
+import { buildBackup, buildUrl, callingCode, detectCountry, filterTemplates, mergeTemplates, parseBackup, extractPhone, findPhone, filterContacts, flagEmoji, formatPhone, guessCountry, isValidPhone, mergeContacts, normalizeSettings, parsePhone, splitLegacyPrefix } from '../WhatsApp_Sender_Pro/shared.js';
 
 const parse = (input, country = 'AR', area = '') => parsePhone(input, country, area);
 
@@ -204,4 +204,13 @@ test('versions compare numerically and releases are read safely', async () => {
   assert.equal(readRelease({ tag_name: 'v2.0.0', assets: [{ name: 'x.zip', browser_download_url: 'https://evil.example/x.zip' }] }).url, '');
   assert.equal(readRelease({ tag_name: 'v2.0.0', prerelease: true, assets: [] }), null);
   assert.equal(readRelease({ tag_name: 'latest', assets: [] }), null);
+});
+
+test('context menu "send direct" finds the phone in what the user selected', () => {
+  assert.equal(findPhone('11‑2345‑6789', 'AR').phone, '5491123456789'); // non-breaking hyphens
+  assert.equal(findPhone('Fecha 2026-11-17, tel 11 2345-6789', 'AR').phone, '5491123456789'); // a date before the phone
+  assert.equal(findPhone('０１１ １５ ２３４５ ６７８９', 'AR').phone, '5491123456789'); // full-width digits
+  assert.equal(findPhone('+44 7400 123456', 'AR').phone, '447400123456');
+  assert.equal(findPhone('99', 'AR'), null);
+  assert.equal(findPhone('Hola mundo', 'AR'), null);
 });

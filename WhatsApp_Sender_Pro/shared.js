@@ -118,9 +118,35 @@ export function detectCountry(input, current){
 
 export function isValidPhone(phone){ return /^[1-9]\d{6,14}$/.test(phone||''); }
 
+// Web pages write numbers with all kinds of dashes, dots and spaces, and sometimes full-width digits
+export function normalizeNumberText(text){
+  return String(text || '')
+    .replace(/[\uFF10-\uFF19]/g, d => String.fromCharCode(d.charCodeAt(0) - 0xFF10 + 48))
+    .replace(/[\u2010-\u2015\u2212\uFE58\uFE63\uFF0D]/g, '-')
+    .replace(/[\u00B7\u2022\u2027\u30FB]/g, '.')
+    .replace(/\uFF0B/g, '+')
+    .replace(/[\u00A0\u2000-\u200B\u202F\u205F\u3000]/g, ' ');
+}
+const NUMBER_RE = /\+?\d[\d\s().\/-]{5,}\d/g;
+
 export function extractPhone(text){
-  const match = (text||'').match(/\+?\d[\d\s().-]{5,}\d/);
+  const match = normalizeNumberText(text).match(NUMBER_RE);
   return match ? match[0] : '';
+}
+
+// Best phone number in a selection: the first valid one, else the first doubtful one, else the longest
+// run of 8-15 digits (WhatsApp itself says if that number has no account). null when there is none.
+export function findPhone(text, country, area = ''){
+  const candidates = normalizeNumberText(text).match(NUMBER_RE) || [];
+  let doubtful = null, raw = null;
+  for (const candidate of candidates) {
+    const r = parsePhone(candidate, country, area);
+    if (r.status === 'ok') return r;
+    if (r.status === 'doubtful' && !doubtful) doubtful = r;
+    const digits = onlyDigits(candidate);
+    if (!raw && digits.length >= 8 && digits.length <= 15) raw = { ...r, status: 'raw', phone: r.phone && onlyDigits(r.phone).length >= 8 ? r.phone : digits };
+  }
+  return doubtful || raw;
 }
 
 export function buildUrl(platform, phone, text){
